@@ -13,12 +13,13 @@ def story(request):
 
 
 def write_story(request):
-    story = Story("No Title", "Test")
-    print(story)
+    # 여기서 input-output 데이터 처리
+    # story = Story("No Title", "Test")
+    # print(story)
     context = {
 
     }
-    return render(request, 'write.html', context)
+    return render(request, 'write.html')
 
 
 def load_story():
