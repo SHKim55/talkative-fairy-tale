@@ -1,6 +1,6 @@
 ---
 name: Softgallery Issue Template
-about: "[TAG] Describe this issue template's purpose here."
+about: 제목 앞에는 항상 [TAG]를 붙여주시기 바랍니다. (TAG = FEAT, REFACTOR, ... )
 title: ''
 labels: ''
 assignees: ''
