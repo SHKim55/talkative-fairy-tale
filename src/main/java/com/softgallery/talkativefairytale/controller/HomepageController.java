@@ -20,6 +20,11 @@ public class HomepageController {
         return "home";
     }
 
+    @GetMapping("/test")
+    public String test() {
+        return "test";
+    }
+
     @PostMapping("/login")
     public String login(@RequestBody UserDTO userDTO) {
         loginService.login();
