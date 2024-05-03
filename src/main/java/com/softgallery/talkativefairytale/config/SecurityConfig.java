@@ -1,7 +1,10 @@
 package com.softgallery.talkativefairytale.config;
 
+import com.softgallery.talkativefairytale.jwt.LoginFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,30 +22,39 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
     private final CorsFilter corsFilter;
 
-    public SecurityConfig(CorsFilter corsFilter) {
+    private final AuthenticationConfiguration authenticationConfiguration;
+
+
+    public SecurityConfig(CorsFilter corsFilter, AuthenticationConfiguration authenticationConfiguration) {
         this.corsFilter = corsFilter;
+        this.authenticationConfiguration = authenticationConfiguration;
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf((auth) -> auth.disable())
+                .formLogin((auth) -> auth.disable())
+                .httpBasic((auth) -> auth.disable())
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
-                                "/version", "/login/google", "/test", "/*", "/api/*"
+                                "/version", "/login/google", "/test", "/*", "/api/*", "/register/*"
                         )
                         .permitAll()
                 )
-                .authorizeHttpRequests(request -> request.anyRequest().authenticated());
+                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

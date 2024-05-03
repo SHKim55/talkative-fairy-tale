@@ -23,7 +23,7 @@ public class LoginService {
 
     public UserDetails loadUserByUserName(final String username) {
         // 회원가입 했다 가정
-        UserDTO userDTO = new UserDTO("jh0429");
+        UserDTO userDTO = new UserDTO("jh0429", "0429");
 
         if(userDTO.getUsername().equals(username)) {
             // 유저 정보를 만들어서 save
