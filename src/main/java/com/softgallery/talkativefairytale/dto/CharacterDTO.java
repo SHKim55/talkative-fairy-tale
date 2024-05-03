@@ -1,12 +1,25 @@
 package com.softgallery.talkativefairytale.dto;
 
+import com.softgallery.talkativefairytale.domain.Character;
+
 public class CharacterDTO {
-    private final Long id;
-    private final String name;
-    private final String gender;
-    private final String personalityGood;
-    private final String personalityBad;
-    private final String personalityNormal;
+    private Long id;
+    private String name;
+    private String gender;
+    private String personalityGood;
+    private String personalityBad;
+    private String personalityNormal;
+
+    public CharacterDTO() { }
+
+    public CharacterDTO(final String name, final String gender, final String personalityGood,
+                        final String personalityBad, final String personalityNormal) {
+        this.name = name;
+        this.gender = gender;
+        this.personalityGood = personalityGood;
+        this.personalityBad = personalityBad;
+        this.personalityNormal = personalityNormal;
+    }
 
     public CharacterDTO(final Long id, final String name, final String gender, final String personalityGood,
                      final String personalityBad, final String personalityNormal) {
@@ -16,6 +29,15 @@ public class CharacterDTO {
         this.personalityGood = personalityGood;
         this.personalityBad = personalityBad;
         this.personalityNormal = personalityNormal;
+    }
+
+    public CharacterDTO(Character character) {
+        this.id = character.getId();
+        this.name = character.getName();
+        this.gender = character.getGender();
+        this.personalityGood = character.getPersonalityGood();
+        this.personalityBad = character.getPersonalityBad();
+        this.personalityNormal = character.getPersonalityNormal();
     }
 
     public Long getId() {
