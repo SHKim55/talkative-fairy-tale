@@ -12,9 +12,9 @@ public class StoryDAO {
     public StoryDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("character")
-                .usingColumns("name", "gender", "personality_good", "personality_bad", "personality_normal")
-                .usingGeneratedKeyColumns("id_character");
+                .withTableName("story")
+                .usingColumns("username", "topic", "level", "is_completed", "content", "modified_date")
+                .usingGeneratedKeyColumns("id_story");
     }
 
 
