@@ -1,4 +1,4 @@
-package com.softgallery.talkativefairytale.auth;
+package com.softgallery.talkativefairytale.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,10 +16,10 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class Auth {
+public class SecurityConfig {
     private final CorsFilter corsFilter;
 
-    public Auth(CorsFilter corsFilter) {
+    public SecurityConfig(CorsFilter corsFilter) {
         this.corsFilter = corsFilter;
     }
 
@@ -38,7 +38,7 @@ public class Auth {
                 )
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
-                                "/version", "/login/google"
+                                "/version", "/login/google", "/test", "/*", "/api/*"
                         )
                         .permitAll()
                 )
