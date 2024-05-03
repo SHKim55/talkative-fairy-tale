@@ -1,16 +1,26 @@
 package com.softgallery.talkativefairytale.domain;
 
 public class Character {
-    private final Long id;
-    private final String name;
-    private final String gender;
-    private final String personalityGood;
-    private final String personalityBad;
-    private final String personalityNormal;
+    private Long id;
+    private String name;
+    private String gender;
+    private String personalityGood;
+    private String personalityBad;
+    private String personalityNormal;
 
     public Character(final Long id, final String name, final String gender, final String personalityGood,
                      final String personalityBad, final String personalityNormal) {
         this.id = id;
+        this.name = name;
+        this.gender = gender;
+        this.personalityGood = personalityGood;
+        this.personalityBad = personalityBad;
+        this.personalityNormal = personalityNormal;
+    }
+
+    // DB 등록 전 임시 객체 생성자
+    public Character(final String name, final String gender, final String personalityGood,
+                     final String personalityBad, final String personalityNormal) {
         this.name = name;
         this.gender = gender;
         this.personalityGood = personalityGood;
