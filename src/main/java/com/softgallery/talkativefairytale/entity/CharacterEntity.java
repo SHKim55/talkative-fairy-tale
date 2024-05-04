@@ -11,14 +11,14 @@ import lombok.Setter;
 public class CharacterEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column
     private String characterName;
 
     // 0: male 1:female
     @Column
-    private int gender;
+    private String gender;
 
     @Column
     private String personality_good;
@@ -26,4 +26,7 @@ public class CharacterEntity {
     @Column String personality_bad;
 
     @Column String personality_normal;
+
+    @Column
+    String whoMade;
 }

@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CharacterRepository extends JpaRepository<CharacterEntity, Integer> {
     Boolean existsByCharacterName(String username);
-    CharacterEntity findById(int id);
+    CharacterEntity findById(Long id);
 }
