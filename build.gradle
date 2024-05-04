@@ -14,13 +14,29 @@ java {
 repositories {
 	mavenCentral()
 }
+// For Lombok
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'io.github.flashvayne:chatgpt-spring-boot-starter:1.0.4'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// For ChatGPT
+	implementation 'io.github.flashvayne:chatgpt-spring-boot-starter:1.0.4'
+	// For Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok:1.18.24'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
 }
 
 tasks.named('test') {
