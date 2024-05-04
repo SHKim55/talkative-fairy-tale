@@ -11,8 +11,8 @@ public class ChatGptConfig {
     public static String API_KEY;
 
     @Value("${chatgpt.api-key}")
-    public void setSecretKey(String value) {
-        API_KEY = value;
+    public void setSecretKey(String key_value) {
+        API_KEY = key_value;
     }
 
     public static final String AUTHORIZATION = "Authorization";
