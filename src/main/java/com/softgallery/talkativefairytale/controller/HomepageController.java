@@ -24,9 +24,4 @@ public class HomepageController {
         System.out.println("here");
         return ResponseEntity.ok().body("hello world");
     }
-
-    @PostMapping("/login2")
-    public ResponseEntity<Integer> login2(@RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok().body(1);
-    }
 }
