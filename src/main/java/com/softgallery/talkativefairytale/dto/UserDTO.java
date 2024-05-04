@@ -6,10 +6,11 @@ public class UserDTO {
     private Long id;
     private String username;
 
-    public UserDTO() { }
+    private String password;
 
-    public UserDTO(final String username) {
+    public UserDTO(String username, String password) {
         this.username = username;
+        this.password = password;
     }
 
     public UserDTO(final Long id, final String username) {
@@ -24,4 +25,8 @@ public class UserDTO {
 
     public Long getId() { return id; }
     public String getUsername() { return username; }
+
+    public String getPassword() {
+        return password;
+    }
 }

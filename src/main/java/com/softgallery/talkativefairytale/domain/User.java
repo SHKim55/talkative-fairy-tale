@@ -1,11 +1,13 @@
 package com.softgallery.talkativefairytale.domain;
 
 public class User {
-    private Long id;
-    private String username;
+    private final String username;
+    private final String password;
 
-    public User(final String username) {
+    public User(String username, String password) {
+
         this.username = username;
+        this.password = password;
     }
 
     public User(final Long id, final String username) {
@@ -16,5 +18,9 @@ public class User {
     public Long getId() { return id; }
     public String getUsername() {
         return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

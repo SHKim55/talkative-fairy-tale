@@ -2,10 +2,12 @@ package com.softgallery.talkativefairytale.controller;
 
 import com.softgallery.talkativefairytale.dto.UserDTO;
 import com.softgallery.talkativefairytale.service.RegisterService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class RegisterController {
@@ -21,8 +23,7 @@ public class RegisterController {
     }
 
     @PostMapping("/register/user")
-    public String registerNewUser(@RequestBody UserDTO userDTO) {
-        registerService.insertNewUser(userDTO);
-        return "redirect:/";
+    public ResponseEntity<Boolean> registerNewUser(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok().body(registerService.insertNewUser(userDTO));
     }
 }
