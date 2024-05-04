@@ -18,10 +18,10 @@ public class UserDTO {
         this.username = username;
     }
 
-    public UserDTO(final User user) {
-        this.id = user.getId();
-        this.username = username;
-    }
+//    public UserDTO(final User user) {
+//        this.id = user.getId();
+//        this.username = username;
+//    }
 
     public Long getId() { return id; }
     public String getUsername() { return username; }
