@@ -1,6 +1,7 @@
 package com.softgallery.talkativefairytale.dto;
 
 import com.softgallery.talkativefairytale.domain.Character;
+import com.softgallery.talkativefairytale.entity.CharacterEntity;
 
 public class CharacterDTO {
     private Long id;
@@ -11,6 +12,15 @@ public class CharacterDTO {
     private String personalityNormal;
 
     public CharacterDTO() { }
+
+    public CharacterDTO(CharacterEntity characterEntity) {
+        this.id=characterEntity.getId();
+        this.name=characterEntity.getCharacterName();
+        this.gender=characterEntity.getGender();
+        this.personalityGood=characterEntity.getPersonality_good();
+        this.personalityNormal=characterEntity.getPersonality_normal();
+        this.personalityBad=characterEntity.getPersonality_bad();
+    }
 
     public CharacterDTO(final String name, final String gender, final String personalityGood,
                         final String personalityBad, final String personalityNormal) {
