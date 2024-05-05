@@ -1,9 +1,9 @@
 package com.softgallery.talkativefairytale.service;
 
 import com.softgallery.talkativefairytale.ChatGptConfig;
-import com.softgallery.talkativefairytale.dto.ChatGptRequestDto;
-import com.softgallery.talkativefairytale.dto.ChatGptResponseDto;
-import com.softgallery.talkativefairytale.dto.QuestionRequestDto;
+import com.softgallery.talkativefairytale.dto.ChatGptRequestDTO;
+import com.softgallery.talkativefairytale.dto.ChatGptResponseDTO;
+import com.softgallery.talkativefairytale.dto.QuestionRequestDTO;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,26 +17,26 @@ public class ChatGptService {
 
     private static RestTemplate restTemplate = new RestTemplate();
 
-    public HttpEntity<ChatGptRequestDto> buildHttpEntity(ChatGptRequestDto requestDto) {
+    public HttpEntity<ChatGptRequestDTO> buildHttpEntity(ChatGptRequestDTO requestDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(ChatGptConfig.MEDIA_TYPE));
         headers.add(ChatGptConfig.AUTHORIZATION, ChatGptConfig.BEARER + ChatGptConfig.API_KEY);
         return new HttpEntity<>(requestDto, headers);
     }
 
-    public ChatGptResponseDto getResponse(HttpEntity<ChatGptRequestDto> chatGptRequestDtoHttpEntity) {
-        ResponseEntity<ChatGptResponseDto> responseEntity = restTemplate.postForEntity(
+    public ChatGptResponseDTO getResponse(HttpEntity<ChatGptRequestDTO> chatGptRequestDtoHttpEntity) {
+        ResponseEntity<ChatGptResponseDTO> responseEntity = restTemplate.postForEntity(
                 ChatGptConfig.URL,
                 chatGptRequestDtoHttpEntity,
-                ChatGptResponseDto.class);
+                ChatGptResponseDTO.class);
 
         return responseEntity.getBody();
     }
 
-    public ChatGptResponseDto askQuestion(QuestionRequestDto requestDto) {
+    public ChatGptResponseDTO askQuestion(QuestionRequestDTO requestDto) {
         return this.getResponse(
                 this.buildHttpEntity(
-                        new ChatGptRequestDto(
+                        new ChatGptRequestDTO(
                                 ChatGptConfig.MODEL,
                                 requestDto.getQuestion(),
                                 ChatGptConfig.MAX_TOKEN,
