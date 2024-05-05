@@ -50,7 +50,8 @@ public class StoryMaking {
                 characterDTO.getGender(),
                 characterDTO.getPersonalityGood(),
                 characterDTO.getPersonalityBad(),
-                characterDTO.getPersonalityNormal()
+                characterDTO.getPersonalityNormal(),
+                characterDTO.getWhoMade()
         );
 
         Long id = characterDAO.insertNewCharacter(character);

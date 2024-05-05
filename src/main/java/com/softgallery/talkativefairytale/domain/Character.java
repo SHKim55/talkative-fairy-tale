@@ -7,18 +7,30 @@ public class Character {
     private String personalityGood;
     private String personalityBad;
     private String personalityNormal;
+    private String whoMade;
 
     public Character(final Long id, final String name, final String gender, final String personalityGood,
-                     final String personalityBad, final String personalityNormal) {
+                     final String personalityBad, final String personalityNormal, final String whoMade) {
         this.id = id;
         this.name = name;
         this.gender = gender;
         this.personalityGood = personalityGood;
         this.personalityBad = personalityBad;
         this.personalityNormal = personalityNormal;
+        this.whoMade = whoMade;
     }
 
     // DB 등록 전 임시 객체 생성자
+    public Character(final String name, final String gender, final String personalityGood,
+                     final String personalityBad, final String personalityNormal, final String whoMade) {
+        this.name = name;
+        this.gender = gender;
+        this.personalityGood = personalityGood;
+        this.personalityBad = personalityBad;
+        this.personalityNormal = personalityNormal;
+        this.whoMade = whoMade;
+    }
+
     public Character(final String name, final String gender, final String personalityGood,
                      final String personalityBad, final String personalityNormal) {
         this.name = name;
@@ -26,6 +38,7 @@ public class Character {
         this.personalityGood = personalityGood;
         this.personalityBad = personalityBad;
         this.personalityNormal = personalityNormal;
+        this.whoMade = "system";
     }
 
     public Long getId() {
@@ -51,4 +64,6 @@ public class Character {
     public String getPersonalityNormal() {
         return personalityNormal;
     }
+
+    public String getWhoMade() { return whoMade; }
 }
