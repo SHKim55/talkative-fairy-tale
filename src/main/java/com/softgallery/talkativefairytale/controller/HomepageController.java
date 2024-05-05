@@ -15,8 +15,8 @@ public class HomepageController {
     }
 
     @GetMapping("/test")
-    public String test() {
-        return "test";
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok().body("auth OK");
     }
 
     @PostMapping("/login")

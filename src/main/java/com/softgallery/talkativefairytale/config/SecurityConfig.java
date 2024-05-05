@@ -1,5 +1,6 @@
 package com.softgallery.talkativefairytale.config;
 
+import com.softgallery.talkativefairytale.auth.JWTFilter;
 import com.softgallery.talkativefairytale.auth.JWTUtil;
 import com.softgallery.talkativefairytale.auth.LoginFilter;
 import org.springframework.context.annotation.Bean;
@@ -45,12 +46,14 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
-                                "/version", "/login/google", "/test", "/*", "/api/*", "/register/*", "/character/*"
+                                "/register/*", "/login"
                         )
                         .permitAll()
+                        .anyRequest().authenticated()
                 )
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }

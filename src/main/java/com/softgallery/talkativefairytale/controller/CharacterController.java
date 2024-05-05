@@ -17,11 +17,6 @@ public class CharacterController {
         this.characterService = characterService;
     }
 
-    @GetMapping("/")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok().body("hello");
-    }
-
     @GetMapping("/setCharacterTable")
     public ResponseEntity<String> setCharacterTable() {
         characterService.setCharacterTable();
