@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Getter
 @NoArgsConstructor
-public class ChatGptRequestDto implements Serializable {
+public class ChatGptRequestDTO implements Serializable {
 
     private String model;
     private String prompt;
@@ -20,7 +20,7 @@ public class ChatGptRequestDto implements Serializable {
     private Double topP;
 
     @Builder
-    public ChatGptRequestDto(String model, String prompt,
+    public ChatGptRequestDTO(String model, String prompt,
                              Integer maxTokens, Double temperature,
                              Double topP) {
         this.model = model;

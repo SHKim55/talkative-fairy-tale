@@ -1,7 +1,7 @@
 package com.softgallery.talkativefairytale.controller;
 
-import com.softgallery.talkativefairytale.dto.ChatGptResponseDto;
-import com.softgallery.talkativefairytale.dto.QuestionRequestDto;
+import com.softgallery.talkativefairytale.dto.ChatGptResponseDTO;
+import com.softgallery.talkativefairytale.dto.QuestionRequestDTO;
 import com.softgallery.talkativefairytale.service.ChatGptService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +19,7 @@ public class ChatGptController {
     }
 
     @PostMapping("/question")
-    public ChatGptResponseDto sendQuestion(@RequestBody QuestionRequestDto requestDto) {
-        return chatGptService.askQuestion(requestDto);
+    public ChatGptResponseDTO sendQuestion(@RequestBody QuestionRequestDTO requestDTO) {
+        return chatGptService.askQuestion(requestDTO);
     }
 }
