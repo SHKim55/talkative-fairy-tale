@@ -15,7 +15,7 @@ public class CharacterDAO {
 
     private final RowMapper<Character> characterRowMapper = (resultSet, rowNum) -> {
         Character character = new Character(
-                resultSet.getLong("id_character"),
+                resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getString("gender"),
                 resultSet.getString("personality_good"),
@@ -35,7 +35,7 @@ public class CharacterDAO {
     }
 
     public Character findCharacterById(Long id) {
-        String sql = "SELECT * FROM `character` WHERE id_character=?";
+        String sql = "SELECT * FROM `character` WHERE id=?";
         return jdbcTemplate.queryForObject(sql, characterRowMapper, id);
     }
 
@@ -58,7 +58,7 @@ public class CharacterDAO {
     }
 
     public void deleteCharacter(Character character, Long id) {
-        String sql = "DELETE FROM `character` WHERE id_character=?";
+        String sql = "DELETE FROM `character` WHERE id=?";
         jdbcTemplate.update(sql, id);
     }
 }

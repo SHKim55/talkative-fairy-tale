@@ -14,7 +14,7 @@ public class CharacterEntity {
     private Long id;
 
     @Column
-    private String characterName;
+    private String name;
 
     // 0: male 1:female
     @Column

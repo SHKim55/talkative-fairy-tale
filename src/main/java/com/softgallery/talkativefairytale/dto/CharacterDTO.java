@@ -15,7 +15,7 @@ public class CharacterDTO {
 
     public CharacterDTO(CharacterEntity characterEntity) {
         this.id=characterEntity.getId();
-        this.name=characterEntity.getCharacterName();
+        this.name=characterEntity.getName();
         this.gender=characterEntity.getGender();
         this.personalityGood=characterEntity.getPersonality_good();
         this.personalityNormal=characterEntity.getPersonality_normal();
