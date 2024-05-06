@@ -3,9 +3,7 @@ package com.softgallery.talkativefairytale.service;
 import com.softgallery.talkativefairytale.dao.StoryDAO;
 import com.softgallery.talkativefairytale.dao.UserDAO;
 import com.softgallery.talkativefairytale.domain.Story;
-import com.softgallery.talkativefairytale.domain.User;
 import com.softgallery.talkativefairytale.dto.StoryDTO;
-import com.softgallery.talkativefairytale.dto.UserDTO;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -20,7 +18,7 @@ public class MainpageService {
         this.storyDAO = storyDAO;
     }
 
-    public ArrayList<StoryDTO> findIncompleteStoriesMadeByUser(String username) {
+    public ArrayList<StoryDTO> findIncompleteStoriesMadeByUserName(String username) {
         ArrayList<StoryDTO> storyDTOs = new ArrayList<>();
         List<Story> stories = storyDAO.findIncompleteStoriesByName(username);
 
@@ -30,7 +28,7 @@ public class MainpageService {
         return storyDTOs;
     }
 
-    public ArrayList<StoryDTO> findCompleteStoriesMadeByUser(String username) {
+    public ArrayList<StoryDTO> findCompleteStoriesMadeByUserName(String username) {
         ArrayList<StoryDTO> storyDTOs = new ArrayList<>();
         List<Story> stories = storyDAO.findCompleteStoriesByName(username);
 
