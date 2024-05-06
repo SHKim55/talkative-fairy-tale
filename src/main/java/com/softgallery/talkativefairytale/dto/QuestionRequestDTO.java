@@ -5,6 +5,6 @@ import lombok.Getter;
 import java.io.Serializable;
 
 @Getter
-public class QuestionRequestDto implements Serializable {
+public class QuestionRequestDTO implements Serializable {
     private String question;
 }

@@ -15,8 +15,8 @@ public class UserDAO {
     public UserDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("user")
-                .usingColumns("username")
+                .withTableName("usertable")
+                .usingColumns("username", "password")
                 .usingGeneratedKeyColumns("id");
     }
 

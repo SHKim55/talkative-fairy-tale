@@ -18,9 +18,10 @@ public class CharacterDAO {
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getString("gender"),
-                resultSet.getString("personality_good"),
-                resultSet.getString("personality_bad"),
-                resultSet.getString("personality_normal")
+                resultSet.getString("personalityGood"),
+                resultSet.getString("personalityBad"),
+                resultSet.getString("personalityNormal"),
+                resultSet.getString("whoMade")
         );
 
         return character;
@@ -29,18 +30,18 @@ public class CharacterDAO {
     public CharacterDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("`character`")
-                .usingColumns("name", "gender", "personality_good", "personality_bad", "personality_normal")
-                .usingGeneratedKeyColumns("id_character");
+                .withTableName("charactertable")
+                .usingColumns("name", "gender", "personalityGood", "personalityBad", "personalityNormal", "whoMade")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Character findCharacterById(Long id) {
-        String sql = "SELECT * FROM `character` WHERE id=?";
+        String sql = "SELECT * FROM charactertable WHERE id=?";
         return jdbcTemplate.queryForObject(sql, characterRowMapper, id);
     }
 
     public Character findCharacterByName(String name) {
-        String sql = "SELECT * FROM `character` WHERE name=?";
+        String sql = "SELECT * FROM charactertable WHERE name=?";
         return jdbcTemplate.queryForObject(sql, Character.class, name);
     }
 
@@ -50,15 +51,16 @@ public class CharacterDAO {
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
                 .addValue("name", character.getName())
                 .addValue("gender", character.getGender())
-                .addValue("personality_good", character.getPersonalityGood())
-                .addValue("personality_bad", character.getPersonalityBad())
-                .addValue("personality_normal", character.getPersonalityNormal());
+                .addValue("personalityGood", character.getPersonalityGood())
+                .addValue("personalityBad", character.getPersonalityBad())
+                .addValue("personalityNormal", character.getPersonalityNormal())
+                .addValue("whoMade", character.getWhoMade());
         Number key = this.simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
         return key.longValue();
     }
 
-    public void deleteCharacter(Character character, Long id) {
-        String sql = "DELETE FROM `character` WHERE id=?";
+    public void deleteCharacter(Long id) {
+        String sql = "DELETE FROM charactertable WHERE id=?";
         jdbcTemplate.update(sql, id);
     }
 }

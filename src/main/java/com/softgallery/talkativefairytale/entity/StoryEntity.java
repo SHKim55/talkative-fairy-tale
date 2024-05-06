@@ -1,6 +1,7 @@
 package com.softgallery.talkativefairytale.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,29 +9,31 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="charactertable")
-public class CharacterEntity {
+@Table(name="storytable")
+public class StoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
+    private String title = "No Title";
+
+    @Column
     @NotNull
-    private String name;
-
-    // 0: male 1: female
-    @Column
-    private String gender;
+    private String username;
 
     @Column
-    private String personalityGood;
+    private String topic;
 
     @Column
-    private String personalityBad;
+    private Long level;
 
     @Column
-    private String personalityNormal;
+    private Boolean isCompleted;
 
     @Column
-    private String whoMade;
+    private String content;
+
+    @Column
+    private LocalDate modifiedDate;
 }

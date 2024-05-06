@@ -21,9 +21,9 @@ public class CharacterService {
         for(String[] curr: CharacterInfos.datasM) {
             CharacterEntity characterEntity = new CharacterEntity();
             characterEntity.setName(curr[0]);
-            characterEntity.setPersonality_good((curr[1]));
-            characterEntity.setPersonality_normal(curr[2]);
-            characterEntity.setPersonality_bad(curr[3]);
+            characterEntity.setPersonalityGood((curr[1]));
+            characterEntity.setPersonalityNormal(curr[2]);
+            characterEntity.setPersonalityBad(curr[3]);
             characterEntity.setGender("0");
             characterRepository.save(characterEntity);
         }
@@ -32,9 +32,9 @@ public class CharacterService {
         for(String[] curr: CharacterInfos.datasF) {
             CharacterEntity characterEntity = new CharacterEntity();
             characterEntity.setName(curr[0]);
-            characterEntity.setPersonality_good((curr[1]));
-            characterEntity.setPersonality_normal(curr[2]);
-            characterEntity.setPersonality_bad(curr[3]);
+            characterEntity.setPersonalityGood((curr[1]));
+            characterEntity.setPersonalityNormal(curr[2]);
+            characterEntity.setPersonalityBad(curr[3]);
             characterEntity.setGender("1");
             characterRepository.save(characterEntity);
         }

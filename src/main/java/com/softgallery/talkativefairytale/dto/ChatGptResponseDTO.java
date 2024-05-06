@@ -11,7 +11,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class ChatGptResponseDto implements Serializable {
+public class ChatGptResponseDTO implements Serializable {
 
     private String id;
     private String object;
@@ -20,7 +20,7 @@ public class ChatGptResponseDto implements Serializable {
     private List<Choice> choices;
 
     @Builder
-    public ChatGptResponseDto(String id, String object,
+    public ChatGptResponseDTO(String id, String object,
                               LocalDate created, String model,
                               List<Choice> choices) {
         this.id = id;

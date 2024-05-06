@@ -10,6 +10,7 @@ public class CharacterDTO {
     private String personalityGood;
     private String personalityBad;
     private String personalityNormal;
+    private String whoMade;
 
     public CharacterDTO() { }
 
@@ -17,28 +18,31 @@ public class CharacterDTO {
         this.id=characterEntity.getId();
         this.name=characterEntity.getName();
         this.gender=characterEntity.getGender();
-        this.personalityGood=characterEntity.getPersonality_good();
-        this.personalityNormal=characterEntity.getPersonality_normal();
-        this.personalityBad=characterEntity.getPersonality_bad();
+        this.personalityGood=characterEntity.getPersonalityGood();
+        this.personalityNormal=characterEntity.getPersonalityNormal();
+        this.personalityBad=characterEntity.getPersonalityBad();
+        this.whoMade=characterEntity.getWhoMade();
     }
 
     public CharacterDTO(final String name, final String gender, final String personalityGood,
-                        final String personalityBad, final String personalityNormal) {
+                        final String personalityBad, final String personalityNormal, final String whoMade) {
         this.name = name;
         this.gender = gender;
         this.personalityGood = personalityGood;
         this.personalityBad = personalityBad;
         this.personalityNormal = personalityNormal;
+        this.whoMade = whoMade;
     }
 
     public CharacterDTO(final Long id, final String name, final String gender, final String personalityGood,
-                     final String personalityBad, final String personalityNormal) {
+                     final String personalityBad, final String personalityNormal, final String whoMade) {
         this.id = id;
         this.name = name;
         this.gender = gender;
         this.personalityGood = personalityGood;
         this.personalityBad = personalityBad;
         this.personalityNormal = personalityNormal;
+        this.whoMade = whoMade;
     }
 
     public CharacterDTO(Character character) {
@@ -48,6 +52,7 @@ public class CharacterDTO {
         this.personalityGood = character.getPersonalityGood();
         this.personalityBad = character.getPersonalityBad();
         this.personalityNormal = character.getPersonalityNormal();
+        this.whoMade = character.getWhoMade();
     }
 
     public Long getId() {
@@ -73,4 +78,6 @@ public class CharacterDTO {
     public String getPersonalityNormal() {
         return personalityNormal;
     }
+
+    public String getWhoMade() { return whoMade; }
 }
