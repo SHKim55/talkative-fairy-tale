@@ -14,6 +14,7 @@ public class CharacterService {
 
     public CharacterService(CharacterRepository characterRepository) {
         this.characterRepository = characterRepository;
+        setCharacterTable();
     }
 
     public void setCharacterTable() {

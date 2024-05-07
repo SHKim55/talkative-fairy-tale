@@ -40,6 +40,16 @@ public class StoryDAO {
                 .usingGeneratedKeyColumns("id");
     }
 
+    public Story findStoriesByNameAndId(String username, Long id) {
+        String sql = "SELECT * FROM storytable WHERE username=? AND id=?";
+        return jdbcTemplate.queryForObject(sql, Story.class, username, id);
+    }
+
+    public Story findStoriesById(Long id) {
+        String sql = "SELECT * FROM storytable WHERE id=?";
+        return jdbcTemplate.queryForObject(sql, storyRowMapper, id);
+    }
+
     public List<Story> findCompleteStoriesByName(String username) {
         String sql = "SELECT * FROM storytable WHERE username=? AND isCompleted=true";
         return jdbcTemplate.query(sql, storyRowMapper, username);
@@ -64,6 +74,11 @@ public class StoryDAO {
         Number key = this.simpleJdbcInsert.executeAndReturnKey(sqlParameterSource);
 
         return key.longValue();
+    }
+
+    public void updateStoryContent(Long id, String newContent) {
+        String sql = "UPDATE storytable SET content=? WHERE id=?";
+        jdbcTemplate.update(sql, newContent, id);
     }
 
     public void deleteStory(Long id) {

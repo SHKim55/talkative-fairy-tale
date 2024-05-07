@@ -1,15 +1,15 @@
 package com.softgallery.talkativefairytale.domain;
 
+import com.softgallery.talkativefairytale.dto.StoryDTO;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class Story {
-    private final Long id;
+    private Long id;
     private String title = "No title";
-    private final String username;
-    private final String topic;
-    private final Long level;
+    private String username;
+    private String topic;
+    private Long level;
     private Boolean isCompleted;
     private String content;
     @DateTimeFormat(pattern = "YYYY-MM-DD")
@@ -25,6 +25,16 @@ public class Story {
         this.isCompleted = isCompleted;
         this.content = content;
         this.modifiedDate = modifiedDate;
+    }
+
+    public Story(final StoryDTO storyDTO) {
+        this.title = storyDTO.getTitle();
+        this.username = storyDTO.getUsername();
+        this.topic = storyDTO.getTopic();
+        this.level = storyDTO.getLevel();
+        this.isCompleted = storyDTO.getCompleted();
+        this.content = storyDTO.getContent();
+        this.modifiedDate = storyDTO.getModifiedDate();
     }
 
     public Long getId() {
