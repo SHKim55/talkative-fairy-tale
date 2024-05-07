@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class StoryDTO {
     private Long id;
-    private String title;
+    private String title = "No Title";
     private String username;
     private String content;
     private String topic;
@@ -65,6 +65,8 @@ public class StoryDTO {
     public String getContent() {
         return content;
     }
+
+    public void setContent(String content) { this.content = content; }
 
     public String getTopic() {
         return topic;
