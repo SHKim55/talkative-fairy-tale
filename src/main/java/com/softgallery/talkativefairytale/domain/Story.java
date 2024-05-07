@@ -1,21 +1,24 @@
 package com.softgallery.talkativefairytale.domain;
 
-import java.time.LocalDateTime;
+import com.softgallery.talkativefairytale.dto.StoryDTO;
+import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class Story {
-    private final Long id;
-    private final String username;
-    private final String topic;
-    private final Long level;
+    private Long id;
+    private String title = "No title";
+    private String username;
+    private String topic;
+    private Long level;
     private Boolean isCompleted;
     private String content;
-    @DateTimeFormat(pattern = "YYYY-MM-DD;HH:MM:SS")
-    private LocalDateTime modifiedDate;
+    @DateTimeFormat(pattern = "YYYY-MM-DD")
+    private LocalDate modifiedDate;
 
-    public Story(final Long id, final String username, final String topic, final Long level, final Boolean isCompleted,
-                 final String content, final LocalDateTime modifiedDate) {
+    public Story(final Long id, final String title, final String username, final String topic, final Long level, final Boolean isCompleted,
+                 final String content, final LocalDate modifiedDate) {
         this.id = id;
+        this.title = title;
         this.username = username;
         this.topic = topic;
         this.level = level;
@@ -24,9 +27,21 @@ public class Story {
         this.modifiedDate = modifiedDate;
     }
 
+    public Story(final StoryDTO storyDTO) {
+        this.title = storyDTO.getTitle();
+        this.username = storyDTO.getUsername();
+        this.topic = storyDTO.getTopic();
+        this.level = storyDTO.getLevel();
+        this.isCompleted = storyDTO.getCompleted();
+        this.content = storyDTO.getContent();
+        this.modifiedDate = storyDTO.getModifiedDate();
+    }
+
     public Long getId() {
         return id;
     }
+
+    public String getTitle() { return title; }
 
     public String getUsername() {
         return username;
@@ -56,11 +71,11 @@ public class Story {
         this.content = content;
     }
 
-    public LocalDateTime getModifiedDate() {
+    public LocalDate getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(final LocalDateTime modifiedDate) {
+    public void setModifiedDate(final LocalDate modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 }

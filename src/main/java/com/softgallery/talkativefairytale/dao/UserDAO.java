@@ -15,14 +15,16 @@ public class UserDAO {
     public UserDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("user")
-                .usingColumns("username")
+                .withTableName("usertable")
+                .usingColumns("username", "password")
                 .usingGeneratedKeyColumns("id");
     }
 
     public long insertNewUser(User user) {
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("password", user.getPassword())
                 .addValue("username", user.getUsername());
+        System.out.println(sqlParameterSource.getValue("password"));
         Number key = this.simpleJdbcInsert.executeAndReturnKey(sqlParameterSource);
 
         return key.longValue();

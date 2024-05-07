@@ -4,14 +4,10 @@ import com.softgallery.talkativefairytale.dao.UserDAO;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginService {
-    private final UserDAO userDAO;
+public class StoryMakingPageService {
+    private UserDAO userDAO;
 
-    public LoginService(UserDAO userDAO) {
+    public StoryMakingPageService(final UserDAO userDAO) {
         this.userDAO = userDAO;
-    }
-
-    public void login() {
-
     }
 }
