@@ -31,7 +31,7 @@ public class StoryEntity {
     @Column
     private Boolean isCompleted;
 
-    @Column
+    @Column(length = 10000)
     private String content;
 
     @Column
