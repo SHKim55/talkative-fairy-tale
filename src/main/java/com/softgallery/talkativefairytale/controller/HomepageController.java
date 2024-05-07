@@ -19,6 +19,11 @@ public class HomepageController {
         return ResponseEntity.ok().body("auth OK");
     }
 
+    @PostMapping("/test")
+    public ResponseEntity<String> testPost(UserDTO userDTO) {
+        return ResponseEntity.ok().body("hello world");
+    }
+
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("here");
