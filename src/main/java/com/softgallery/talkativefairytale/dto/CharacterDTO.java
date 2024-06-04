@@ -4,7 +4,7 @@ import com.softgallery.talkativefairytale.domain.Character;
 import com.softgallery.talkativefairytale.entity.CharacterEntity;
 
 public class CharacterDTO {
-    private Long id;
+    private Long characterId;
     private String name;
     private String gender;
     private String personalityGood;
@@ -15,7 +15,7 @@ public class CharacterDTO {
     public CharacterDTO() { }
 
     public CharacterDTO(CharacterEntity characterEntity) {
-        this.id=characterEntity.getId();
+        this.characterId =characterEntity.getCharacterId();
         this.name=characterEntity.getName();
         this.gender=characterEntity.getGender();
         this.personalityGood=characterEntity.getPersonalityGood();
@@ -34,9 +34,9 @@ public class CharacterDTO {
         this.whoMade = whoMade;
     }
 
-    public CharacterDTO(final Long id, final String name, final String gender, final String personalityGood,
-                     final String personalityBad, final String personalityNormal, final String whoMade) {
-        this.id = id;
+    public CharacterDTO(final Long characterId, final String name, final String gender, final String personalityGood,
+                        final String personalityBad, final String personalityNormal, final String whoMade) {
+        this.characterId = characterId;
         this.name = name;
         this.gender = gender;
         this.personalityGood = personalityGood;
@@ -46,7 +46,7 @@ public class CharacterDTO {
     }
 
     public CharacterDTO(Character character) {
-        this.id = character.getId();
+        this.characterId = character.getId();
         this.name = character.getName();
         this.gender = character.getGender();
         this.personalityGood = character.getPersonalityGood();
@@ -55,8 +55,8 @@ public class CharacterDTO {
         this.whoMade = character.getWhoMade();
     }
 
-    public Long getId() {
-        return id;
+    public Long getCharacterId() {
+        return characterId;
     }
 
     public String getName() {

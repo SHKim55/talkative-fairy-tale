@@ -4,11 +4,8 @@ import static java.lang.Long.parseLong;
 
 import com.softgallery.talkativefairytale.dto.StoryDTO;
 import com.softgallery.talkativefairytale.dto.UserDTO;
-import com.softgallery.talkativefairytale.service.StoryMaking;
+import com.softgallery.talkativefairytale.service.story.StoryMaking;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;

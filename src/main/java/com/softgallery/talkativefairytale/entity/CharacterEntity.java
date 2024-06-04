@@ -8,11 +8,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="charactertable")
+@Table(name="character")
 public class CharacterEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long characterId;
 
     @Column
     @NotNull
@@ -20,6 +20,7 @@ public class CharacterEntity {
 
     // 0: male 1: female
     @Column
+    @NotNull
     private String gender;
 
     @Column
@@ -32,5 +33,6 @@ public class CharacterEntity {
     private String personalityNormal;
 
     @Column
+    @NotNull
     private String whoMade;
 }

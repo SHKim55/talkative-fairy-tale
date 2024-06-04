@@ -2,8 +2,8 @@ package com.softgallery.talkativefairytale.controller;
 
 import com.softgallery.talkativefairytale.dto.StoryDTO;
 import com.softgallery.talkativefairytale.dto.UserDTO;
-import com.softgallery.talkativefairytale.service.MainpageService;
-import com.softgallery.talkativefairytale.service.StoryMaking;
+import com.softgallery.talkativefairytale.service.story.MainpageService;
+import com.softgallery.talkativefairytale.service.story.StoryMaking;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,13 +31,13 @@ public class MainpageController {
     public ResponseEntity<Map<String, Object>> main(@RequestBody UserDTO userDTO) {
         Map<String, Object> responseEntity = new HashMap<>();
 
-        // 여기서 페이지 로딩에 필요한 데이터들 다 불러오기
-        incompleteStories = mainpageService.findIncompleteStoriesMadeByUserName(userDTO.getUsername());
-        completeStories = mainpageService.findCompleteStoriesMadeByUserName(userDTO.getUsername());
-
-        // 한번에 Map으로 집어넣어서 보내기
-        responseEntity.put("incompleteStories", incompleteStories);
-        responseEntity.put("completeStories", completeStories);
+//        // 여기서 페이지 로딩에 필요한 데이터들 다 불러오기
+//        incompleteStories = mainpageService.findIncompleteStoriesMadeByUserName(userDTO.getUsername());
+//        completeStories = mainpageService.findCompleteStoriesMadeByUserName(userDTO.getUsername());
+//
+//        // 한번에 Map으로 집어넣어서 보내기
+//        responseEntity.put("incompleteStories", incompleteStories);
+//        responseEntity.put("completeStories", completeStories);
 
         return ResponseEntity.ok().body(responseEntity);
     }
