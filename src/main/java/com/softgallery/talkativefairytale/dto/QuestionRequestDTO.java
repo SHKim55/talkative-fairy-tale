@@ -1,5 +1,6 @@
 package com.softgallery.talkativefairytale.dto;
 
+import com.softgallery.talkativefairytale.service.chatGpt.Message;
 import lombok.Getter;
 
 import java.io.Serializable;

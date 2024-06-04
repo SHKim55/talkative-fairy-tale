@@ -1,4 +1,4 @@
-package com.softgallery.talkativefairytale;
+package com.softgallery.talkativefairytale.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

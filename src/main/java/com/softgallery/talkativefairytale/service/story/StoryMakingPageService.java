@@ -1,4 +1,4 @@
-package com.softgallery.talkativefairytale.service;
+package com.softgallery.talkativefairytale.service.story;
 
 import com.softgallery.talkativefairytale.dao.UserDAO;
 import org.springframework.stereotype.Service;

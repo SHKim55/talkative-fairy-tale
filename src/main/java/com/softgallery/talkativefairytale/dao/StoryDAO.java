@@ -77,12 +77,12 @@ public class StoryDAO {
     }
 
     public void updateStoryContent(Long id, String newContent) {
-        String sql = "UPDATE storytable SET content=? WHERE id=?";
+        String sql = "UPDATE storytable SET content=? WHERE storyId=?";
         jdbcTemplate.update(sql, newContent, id);
     }
 
     public void deleteStory(Long id) {
-        String sql = "DELETE FROM storytable WHERE id=?";
+        String sql = "DELETE FROM storytable WHERE storyId=?";
         jdbcTemplate.update(sql, id);
     }
 }

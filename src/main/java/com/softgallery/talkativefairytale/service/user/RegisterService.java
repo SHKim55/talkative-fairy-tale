@@ -1,10 +1,8 @@
-package com.softgallery.talkativefairytale.service;
+package com.softgallery.talkativefairytale.service.user;
 
-import com.softgallery.talkativefairytale.dao.UserDAO;
-import com.softgallery.talkativefairytale.domain.User;
 import com.softgallery.talkativefairytale.dto.UserDTO;
 import com.softgallery.talkativefairytale.entity.UserEntity;
-import com.softgallery.talkativefairytale.repo.UserRepository;
+import com.softgallery.talkativefairytale.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

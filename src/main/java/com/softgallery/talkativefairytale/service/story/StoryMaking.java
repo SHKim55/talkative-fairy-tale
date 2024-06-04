@@ -1,4 +1,4 @@
-package com.softgallery.talkativefairytale.service;
+package com.softgallery.talkativefairytale.service.story;
 
 import com.softgallery.talkativefairytale.dao.CharacterDAO;
 import com.softgallery.talkativefairytale.dao.StoryDAO;
@@ -6,9 +6,11 @@ import com.softgallery.talkativefairytale.dao.UserDAO;
 import com.softgallery.talkativefairytale.data.GPTPromptingInfo;
 import com.softgallery.talkativefairytale.domain.Character;
 import com.softgallery.talkativefairytale.domain.Story;
-import com.softgallery.talkativefairytale.domain.User;
 import com.softgallery.talkativefairytale.dto.*;
 
+import com.softgallery.talkativefairytale.service.character.CharacterService;
+import com.softgallery.talkativefairytale.service.chatGpt.ChatGptService;
+import com.softgallery.talkativefairytale.service.chatGpt.Choice;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
