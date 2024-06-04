@@ -6,6 +6,7 @@ import com.softgallery.talkativefairytale.dto.StoryDTO;
 import com.softgallery.talkativefairytale.dto.UserDTO;
 import com.softgallery.talkativefairytale.service.story.StoryMaking;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,7 @@ public class StoryMakingPageController {
     public ResponseEntity<StoryDTO> makeStory(@RequestBody UserDTO userDTO, @RequestParam(value = "topic") String topic,
                             @RequestParam(value = "level", defaultValue = "1") String level) {
         System.out.println("topic: " + topic + "level: " + level);
-        currentStory = new StoryDTO("No Title", userDTO.getUsername(), "", topic, parseLong(level), false, LocalDate.now());
+        currentStory = new StoryDTO("No Title", userDTO.getUsername(), "", topic, parseLong(level), false, LocalDateTime.now());
         currentStory = storyMaking.createStory(currentStory);
         return ResponseEntity.ok().body(currentStory);
     }
