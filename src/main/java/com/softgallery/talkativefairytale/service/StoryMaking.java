@@ -7,12 +7,8 @@ import com.softgallery.talkativefairytale.data.GPTPromptingInfo;
 import com.softgallery.talkativefairytale.domain.Character;
 import com.softgallery.talkativefairytale.domain.Story;
 import com.softgallery.talkativefairytale.domain.User;
-import com.softgallery.talkativefairytale.dto.CharacterDTO;
-import com.softgallery.talkativefairytale.dto.ChatGptResponseDTO;
-import com.softgallery.talkativefairytale.dto.Choice;
-import com.softgallery.talkativefairytale.dto.QuestionRequestDTO;
-import com.softgallery.talkativefairytale.dto.StoryDTO;
-import com.softgallery.talkativefairytale.dto.UserDTO;
+import com.softgallery.talkativefairytale.dto.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -54,7 +50,7 @@ public class StoryMaking {
         currentStory = new StoryDTO(
                 emptyStoryDTO.getTitle(),
                 emptyStoryDTO.getUsername(),
-                question + "\n" + "<gpt>\n" + choice.getText(),
+                question + "\n" + "<gpt>\n" + choice.getMessage(),
                 emptyStoryDTO.getTopic(),
                 emptyStoryDTO.getLevel(),
                 emptyStoryDTO.getCompleted(),
@@ -65,22 +61,22 @@ public class StoryMaking {
         return currentStory;
     }
 
-    public StoryDTO addContentToStory(Long idStory, String newContent) {
-        StoryDTO previousStoryDTO = new StoryDTO(storyDAO.findStoriesById(idStory));
-        String updatedContent = previousStoryDTO.getContent() + "<user>\n" + newContent;
-
-        String question = createGPTQuery(previousStoryDTO.getTopic(),
-                previousStoryDTO.getLevel(), updatedContent, characters);
-
-        ChatGptResponseDTO responseDTO = chatGptService.askQuestion(new QuestionRequestDTO(question));
-        Choice choice = responseDTO.getChoices().get(0);
-
-        String addedSentence = updatedContent + "\n<gpt>\n" + choice.getText();
-
-        previousStoryDTO.setContent(addedSentence);
-        storyDAO.updateStoryContent(previousStoryDTO.getId(), addedSentence);
-        return previousStoryDTO;
-    }
+//    public StoryDTO addContentToStory(Long idStory, String newContent) {
+//        StoryDTO previousStoryDTO = new StoryDTO(storyDAO.findStoriesById(idStory));
+//        String updatedContent = previousStoryDTO.getContent() + "<user>\n" + newContent;
+//
+//        String question = createGPTQuery(previousStoryDTO.getTopic(),
+//                previousStoryDTO.getLevel(), updatedContent, characters);
+//
+//        ChatGptResponseDTO responseDTO = chatGptService.askQuestion(new QuestionRequestDTO(question));
+//        Choice choice = responseDTO.getChoices().get(0);
+//
+//        String addedSentence = updatedContent + "\n<gpt>\n" + choice.getMessage();
+//
+//        previousStoryDTO.setContent(addedSentence);
+//        storyDAO.updateStoryContent(previousStoryDTO.getId(), addedSentence);
+//        return previousStoryDTO;
+//    }
 
 //    public StoryDTO resumeMakingStory(StoryDTO previousStoryDTO) {
 //        characters = new ArrayList<>(List.of(characterService.selectCharacters()));

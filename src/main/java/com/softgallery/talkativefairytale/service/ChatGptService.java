@@ -38,7 +38,7 @@ public class ChatGptService {
                 this.buildHttpEntity(
                         new ChatGptRequestDTO(
                                 ChatGptConfig.MODEL,
-                                requestDto.getQuestion(),
+                                requestDto.getMessages(),
                                 ChatGptConfig.MAX_TOKEN,
                                 ChatGptConfig.TEMPERATURE,
                                 ChatGptConfig.TOP_P

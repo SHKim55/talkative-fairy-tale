@@ -35,11 +35,11 @@ public class StoryMakingPageController {
         return ResponseEntity.ok().body(currentStory);
     }
 
-    @PostMapping("/new/content")
-    public ResponseEntity<StoryDTO> addContent(@RequestBody StoryDTO storyInfo) {
-        StoryDTO updatedStory = storyMaking.addContentToStory(storyInfo.getId(), storyInfo.getContent());
-        return ResponseEntity.ok().body(updatedStory);
-    }
+//    @PostMapping("/new/content")
+//    public ResponseEntity<StoryDTO> addContent(@RequestBody StoryDTO storyInfo) {
+//        StoryDTO updatedStory = storyMaking.addContentToStory(storyInfo.getId(), storyInfo.getContent());
+//        return ResponseEntity.ok().body(updatedStory);
+//    }
 
 //    @PostMapping("/resume")   // <username, id>
 //    public ResponseEntity<StoryDTO> resumeStory(@RequestBody Map<String, String> storyInfo) {
