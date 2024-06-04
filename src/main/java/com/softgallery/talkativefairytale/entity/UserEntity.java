@@ -10,11 +10,9 @@ import lombok.Setter;
 @Setter
 @Table(name="usertable")
 public class UserEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column
+    @Id
     @NotNull
     private String username;
 
