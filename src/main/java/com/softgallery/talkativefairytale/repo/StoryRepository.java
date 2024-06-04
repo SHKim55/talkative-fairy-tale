@@ -1,6 +1,7 @@
 package com.softgallery.talkativefairytale.repo;
 
 import com.softgallery.talkativefairytale.entity.StoryEntity;
+import com.softgallery.talkativefairytale.service.story.Visibility;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,5 +20,6 @@ public interface StoryRepository extends JpaRepository<StoryEntity, Long> {
     List<StoryEntity> findAllByOrderByModifiedDateDesc();
     List<StoryEntity> findAllByOrderByLikeDesc();
 
-    List<StoryEntity> findAllByTopic();
+    List<StoryEntity> findAllByVisibility(Visibility visibility);
+    List<StoryEntity> findAllByTopic(String topic);
 }

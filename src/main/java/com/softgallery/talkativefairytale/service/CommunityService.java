@@ -5,6 +5,7 @@ import com.softgallery.talkativefairytale.dto.StoryDTO;
 import com.softgallery.talkativefairytale.dto.StoryNumberDTO;
 import com.softgallery.talkativefairytale.entity.StoryEntity;
 import com.softgallery.talkativefairytale.repo.StoryRepository;
+import com.softgallery.talkativefairytale.service.story.Visibility;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -51,7 +52,7 @@ public class CommunityService {
     }
 
     public Set<String> getAllTopics() {
-        List<StoryEntity> storyEntities = storyRepository.findAllByTopic();
+        List<StoryEntity> storyEntities = storyRepository.findAll();
         Set<String> topics = new HashSet<String>();
         for(StoryEntity story:storyEntities) {
             topics.add(story.getTopic());
@@ -70,20 +71,21 @@ public class CommunityService {
     }
 
     private StoryDTO entityToDto(StoryEntity story) {
-        return new StoryDTO(story.getId(), story.getTitle(), story.getUsername(), story.getContent(),
-        story.getTopic(), story.getLevel(), story.getIsCompleted(), story.getModifiedDate());
+        return new StoryDTO(story.getStoryId(), story.getTitle(), story.getUsername(), story.getContent(),
+                story.getTopic(), story.getLevel(), story.getIsCompleted(), story.getModifiedDate(), story.getVisibility(),
+                story.getLikeNum(), story.getDislikeNum());
     }
 
     private List<StoryDTO> getAllPublicStories() {
         List<StoryDTO> retStories = new ArrayList<>();
-        List<StoryEntity> stories = storyRepository.findAll();
+        List<StoryEntity> stories = storyRepository.findAllByVisibility(Visibility.PUBLIC);
 
         return entityListToDto(stories);
     }
 
     private List<StoryDTO> getSortedByLike() {
         List<StoryDTO> storyDTOS = getAllPublicStories();
-        Collections.sort(storyDTOS, (a, b) -> b.getLike().compareTo(a.getLike()));
+        Collections.sort(storyDTOS, (a, b) -> b.getLikeNum().compareTo(a.getLikeNum()));
         return storyDTOS;
     }
 }

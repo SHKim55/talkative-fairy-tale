@@ -1,4 +1,4 @@
-package com.softgallery.talkativefairytale.dto;
+package com.softgallery.talkativefairytale.service.user;
 
 import com.softgallery.talkativefairytale.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;

@@ -60,7 +60,7 @@ public class CharacterDAO {
     }
 
     public void deleteCharacter(Long id) {
-        String sql = "DELETE FROM charactertable WHERE id=?";
+        String sql = "DELETE FROM charactertable WHERE characterId=?";
         jdbcTemplate.update(sql, id);
     }
 }

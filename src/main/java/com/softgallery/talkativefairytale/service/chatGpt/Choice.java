@@ -1,6 +1,7 @@
-package com.softgallery.talkativefairytale.dto;
+package com.softgallery.talkativefairytale.service.chatGpt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.softgallery.talkativefairytale.service.chatGpt.Message;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

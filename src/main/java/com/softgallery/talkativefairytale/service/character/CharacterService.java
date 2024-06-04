@@ -1,9 +1,10 @@
-package com.softgallery.talkativefairytale.service;
+package com.softgallery.talkativefairytale.service.character;
 
 import com.softgallery.talkativefairytale.data.CharacterInfos;
 import com.softgallery.talkativefairytale.dto.CharacterDTO;
 import com.softgallery.talkativefairytale.entity.CharacterEntity;
-import com.softgallery.talkativefairytale.repo.CharacterRepository;
+import com.softgallery.talkativefairytale.repository.CharacterRepository;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -63,7 +64,10 @@ public class CharacterService {
             if(appeared[currPick]) continue;
             appeared[currPick] = true;
 
-            CharacterEntity currCharacter = characterRepository.findById(Long.valueOf(currPick));
+            Optional<CharacterEntity> currCharacterOptional = characterRepository.findByCharacterId(Long.valueOf(currPick));
+            if(currCharacterOptional.isEmpty()) throw new RuntimeException("No such character");
+
+            CharacterDTO currCharacter = new CharacterDTO(currCharacterOptional.get());
             if(currCharacter.getGender().equals("0")) {
                 if(numOfMaleCharacter<=0) continue;
                 else numOfMaleCharacter--;
@@ -73,8 +77,7 @@ public class CharacterService {
                 else numOfFemaleCharacter--;
             }
 
-            CharacterDTO selectedCharacter = new CharacterDTO(currCharacter);
-            selectedCharacters[--numOfTotalCharacter]=selectedCharacter;
+            selectedCharacters[--numOfTotalCharacter] = currCharacter;
         }
 
         return selectedCharacters;

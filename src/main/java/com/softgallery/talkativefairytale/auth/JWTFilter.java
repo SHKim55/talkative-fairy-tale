@@ -1,7 +1,6 @@
 package com.softgallery.talkativefairytale.auth;
 
-import com.softgallery.talkativefairytale.config.SecurityConfig;
-import com.softgallery.talkativefairytale.dto.CustomUserDetails;
+import com.softgallery.talkativefairytale.service.user.CustomUserDetails;
 import com.softgallery.talkativefairytale.entity.UserEntity;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

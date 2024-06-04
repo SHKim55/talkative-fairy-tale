@@ -1,9 +1,7 @@
-package com.softgallery.talkativefairytale.service;
+package com.softgallery.talkativefairytale.service.user;
 
-import com.softgallery.talkativefairytale.dto.CustomUserDetails;
 import com.softgallery.talkativefairytale.entity.UserEntity;
-import com.softgallery.talkativefairytale.repo.UserRepository;
-import org.hibernate.dialect.SybaseASEDialect;
+import com.softgallery.talkativefairytale.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

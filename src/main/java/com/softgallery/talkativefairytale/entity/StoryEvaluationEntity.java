@@ -13,17 +13,17 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "character_in_story")
-public class CharacterInStoryEntity {
+@Table(name = "story_evaluation")
+public class StoryEvaluationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
     @NotNull
-    private Long storyId;
+    private String username;
 
     @Column
     @NotNull
-    private Long characterId;
+    private Long storyId;
 }

@@ -1,5 +1,6 @@
 package com.softgallery.talkativefairytale.dto;
 
+import com.softgallery.talkativefairytale.service.chatGpt.Choice;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

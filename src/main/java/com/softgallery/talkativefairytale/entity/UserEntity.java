@@ -8,10 +8,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="usertable")
+@Table(name="user")
 public class UserEntity {
-
-    @Column
     @Id
     @NotNull
     private String username;
