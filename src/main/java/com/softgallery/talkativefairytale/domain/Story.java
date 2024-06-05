@@ -34,7 +34,6 @@ public class Story {
         this.level = storyDTO.getLevel();
         this.isCompleted = storyDTO.getCompleted();
         this.content = storyDTO.getContent();
-        this.modifiedDate = storyDTO.getModifiedDate();
     }
 
     public Long getId() {

@@ -5,13 +5,15 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
 @Getter
 @Setter
-@Table(name="storytable")
+@NoArgsConstructor
+@Table(name="story")
 public class StoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,4 +57,19 @@ public class StoryEntity {
     @Column(columnDefinition = "BIGINT DEFAULT 0")
     @NotNull
     private Long dislikeNum;
+
+
+    public StoryEntity(Long storyId, String title, String username, String topic, Long level, Boolean isCompleted, String content, LocalDateTime modifiedDate, Visibility visibility, Long likeNum, Long dislikeNum) {
+        this.storyId = storyId;
+        this.title = title;
+        this.username = username;
+        this.topic = topic;
+        this.level = level;
+        this.isCompleted = isCompleted;
+        this.content = content;
+        this.modifiedDate = modifiedDate;
+        this.visibility = visibility;
+        this.likeNum = likeNum;
+        this.dislikeNum = dislikeNum;
+    }
 }

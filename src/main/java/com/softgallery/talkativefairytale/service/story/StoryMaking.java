@@ -1,13 +1,11 @@
 package com.softgallery.talkativefairytale.service.story;
 
-import com.softgallery.talkativefairytale.dao.CharacterDAO;
-import com.softgallery.talkativefairytale.dao.StoryDAO;
-import com.softgallery.talkativefairytale.dao.UserDAO;
 import com.softgallery.talkativefairytale.data.GPTPromptingInfo;
 import com.softgallery.talkativefairytale.domain.Character;
-import com.softgallery.talkativefairytale.domain.Story;
 import com.softgallery.talkativefairytale.dto.*;
 
+import com.softgallery.talkativefairytale.entity.StoryEntity;
+import com.softgallery.talkativefairytale.repository.StoryRepository;
 import com.softgallery.talkativefairytale.service.character.CharacterService;
 import com.softgallery.talkativefairytale.service.chatGpt.ChatGptService;
 import com.softgallery.talkativefairytale.service.chatGpt.Choice;
@@ -19,22 +17,18 @@ import org.springframework.stereotype.Service;
 public class StoryMaking {
     private final CharacterService characterService;
     private final ChatGptService chatGptService;
-    private final UserDAO userDAO;
-    private final StoryDAO storyDAO;
-    private final CharacterDAO characterDAO;
     private final GPTPromptingInfo gptPromptingInfo = new GPTPromptingInfo();
 
     private UserDTO currentUser;
     private StoryDTO currentStory;
     private ArrayList<CharacterDTO> characters;
 
-    public StoryMaking(final CharacterService characterService, final ChatGptService chatGptService, final UserDAO userDAO,
-                       final StoryDAO storyDAO, final CharacterDAO characterDAO) {
+    private StoryRepository storyRepository;
+
+    public StoryMaking(final CharacterService characterService, final ChatGptService chatGptService, StoryRepository storyRepository) {
         this.characterService = characterService;
         this.chatGptService = chatGptService;
-        this.userDAO = userDAO;
-        this.storyDAO = storyDAO;
-        this.characterDAO = characterDAO;
+        this.storyRepository = storyRepository;
     }
 
     private void updateCharacterList(Character character) {
@@ -58,7 +52,7 @@ public class StoryMaking {
                 emptyStoryDTO.getCompleted(),
                 emptyStoryDTO.getModifiedDate());
 
-        Long storyId = storyDAO.insertNewStory(new Story(currentStory));
+        storyRepository.save(dtoToEntity(currentStory));
 
         return currentStory;
     }
@@ -129,32 +123,53 @@ public class StoryMaking {
 //    public StoryDTO findStoryByUsernameAndId(Map<String, String> storyInfo) {
 //        Story story = storyDAO.findIncompleteStoriesByName(storyInfo.);
 //    }
+//
+//    public CharacterDTO findCharacterById(Long characterId) {
+//        Character character = charae
+//        Character character = characterDAO.findCharacterById(characterId);
+//        System.out.println("Found character : " + character.getName());
+//        updateCharacterList(character);
+//        return new CharacterDTO(character);
+//    }
+//
+//    public CharacterDTO findCharacterByName(String characterName) {
+//        Character character = characterDAO.findCharacterByName(characterName);
+//        System.out.println("Found character : " + character.getName());
+//        updateCharacterList(character);
+//        return new CharacterDTO(character);
+//    }
 
-    public CharacterDTO findCharacterById(Long characterId) {
-        Character character = characterDAO.findCharacterById(characterId);
-        System.out.println("Found character : " + character.getName());
-        updateCharacterList(character);
-        return new CharacterDTO(character);
+//    public CharacterDTO insertNewCharacter(CharacterDTO characterDTO) {
+//        Character character = new Character(
+//                characterDTO.getName(),
+//                characterDTO.getGender(),
+//                characterDTO.getPersonalityGood(),
+//                characterDTO.getPersonalityBad(),
+//                characterDTO.getPersonalityNormal(),
+//                characterDTO.getWhoMade()
+//        );
+//
+//        Long id = characterDAO.insertNewCharacter(character);
+//        return this.findCharacterById(id);
+//    }
+
+    private StoryDTO entityToDto(StoryEntity story) {
+        return new StoryDTO(story.getStoryId(), story.getTitle(), story.getUsername(), story.getContent(), story.getTopic(),
+                story.getLevel(), story.getIsCompleted(), story.getModifiedDate(), story.getVisibility(), story.getLikeNum(), story.getDislikeNum());
     }
-
-    public CharacterDTO findCharacterByName(String characterName) {
-        Character character = characterDAO.findCharacterByName(characterName);
-        System.out.println("Found character : " + character.getName());
-        updateCharacterList(character);
-        return new CharacterDTO(character);
-    }
-
-    public CharacterDTO insertNewCharacter(CharacterDTO characterDTO) {
-        Character character = new Character(
-                characterDTO.getName(),
-                characterDTO.getGender(),
-                characterDTO.getPersonalityGood(),
-                characterDTO.getPersonalityBad(),
-                characterDTO.getPersonalityNormal(),
-                characterDTO.getWhoMade()
+    private StoryEntity dtoToEntity(StoryDTO storyDTO) {
+        return new StoryEntity(
+                storyDTO.getStoryId(),
+                storyDTO.getTitle(),
+                storyDTO.getUsername(),
+                storyDTO.getTopic(),
+                storyDTO.getLevel(),
+                storyDTO.getCompleted(),
+                storyDTO.getContent(),
+                storyDTO.getModifiedDate(),
+                storyDTO.getVisibility(),
+                storyDTO.getLikeNum(),
+                storyDTO.getDislikeNum()
         );
-
-        Long id = characterDAO.insertNewCharacter(character);
-        return this.findCharacterById(id);
     }
 }
