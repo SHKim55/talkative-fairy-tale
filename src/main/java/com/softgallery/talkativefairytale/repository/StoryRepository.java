@@ -22,6 +22,8 @@ public interface StoryRepository extends JpaRepository<StoryEntity, Long> {
 
     List<StoryEntity> findAllByUsername(String username);
 
+    List<StoryEntity> findAllByUsernameAndIsCompleted(String username, Boolean isCompleted);
+
 
     @Override
     void deleteById(Long aLong);
