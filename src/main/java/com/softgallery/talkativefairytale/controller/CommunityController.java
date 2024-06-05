@@ -19,14 +19,15 @@ public class CommunityController {
     }
 
     @GetMapping("/ranking")
-    public StoryNumberDTO getRanker() {
-        return communityService.getRanker();
+    public StoryNumberDTO getRanker(@RequestHeader("Authorization") String token) {
+        return communityService.getRanker(token);
     }
 
     //topic: all, DB에 있는 topic, type: recent, like
     @GetMapping("/stories/{topic}/{type}")
-    public StoryNumberDTO getRanker(@PathVariable("topic") String topic, @PathVariable("type") String type) {
-        return communityService.getBy(topic, type);
+    public StoryNumberDTO getBy(@PathVariable("topic") String topic, @PathVariable("type") String type,
+                                @RequestHeader("Authorization") String token) {
+        return communityService.getBy(topic, type, token);
     }
 
     @GetMapping("/topics")

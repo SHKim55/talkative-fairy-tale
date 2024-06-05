@@ -8,10 +8,11 @@ import java.util.List;
 public class StoryNumberDTO {
     private Long storyNum;
     private List<StoryDTO> data;
+    private List<Boolean> evaluated;
 
     public StoryNumberDTO(){}
 
-    public StoryNumberDTO(Long storyNum, List<StoryDTO> data) {
+    public StoryNumberDTO(Long storyNum, List<StoryDTO> data, List<Boolean> evaluated) {
         this.storyNum = storyNum;
         this.data = data;
     }

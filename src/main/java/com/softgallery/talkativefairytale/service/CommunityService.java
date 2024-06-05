@@ -25,15 +25,19 @@ public class CommunityService {
         this.jwtUtil = jwtUtil;
     }
 
-    public StoryNumberDTO getRanker() {
+    public StoryNumberDTO getRanker(String token) {
+        String username = jwtUtil.getUsername(JWTUtil.getOnlyToken(token));
         List<StoryDTO> storyDTOS = getSortedByLike();
         int numberOfItems = Math.min(3, storyDTOS.size());
 
         List<StoryDTO> rankers = storyDTOS.subList(0, numberOfItems);
-        return new StoryNumberDTO((long)numberOfItems, rankers);
+        List<Boolean> evaluated = this.getEvaluated(rankers, username);
+
+        return new StoryNumberDTO((long)numberOfItems, rankers, evaluated);
     }
 
-    public StoryNumberDTO getBy(String topic, String type) {
+    public StoryNumberDTO getBy(String topic, String type, String token) {
+        String username = jwtUtil.getUsername(JWTUtil.getOnlyToken(token));
         List<StoryDTO> stories;
         if ("all".equalsIgnoreCase(topic)) {
             if ("recent".equalsIgnoreCase(type)) {
@@ -55,7 +59,9 @@ public class CommunityService {
             }
         }
 
-        return new StoryNumberDTO((long)stories.size(), stories);
+        List<Boolean> evaluated = this.getEvaluated(stories, username);
+
+        return new StoryNumberDTO((long)stories.size(), stories, evaluated);
     }
 
     public Set<String> getAllTopics() {
@@ -95,6 +101,32 @@ public class CommunityService {
         }
     }
 
+    private List<StoryDTO> getAllPublicStories() {
+        List<StoryDTO> retStories = new ArrayList<>();
+        List<StoryEntity> stories = storyRepository.findAllByVisibilityAndIsCompletedTrue(Visibility.PUBLIC);
+
+        return entityListToDto(stories);
+    }
+
+    private List<StoryDTO> getSortedByLike() {
+        List<StoryDTO> storyDTOS = getAllPublicStories();
+        Collections.sort(storyDTOS, (a, b) -> b.getLikeNum().compareTo(a.getLikeNum()));
+        return storyDTOS;
+    }
+
+    private List<Boolean> getEvaluated(List<StoryDTO> storyDTOS, String username) {
+        List<Boolean> evaluated = new ArrayList<Boolean>();
+
+        for(StoryDTO storyDTO:storyDTOS) {
+            if(storyDTO.getUsername().equals(username)) {
+                evaluated.add(true);
+                continue;
+            }
+            evaluated.add(false);
+        }
+        return evaluated;
+    }
+
     private List<StoryDTO> entityListToDto(List<StoryEntity> stories) {
         List<StoryDTO> retStories = new ArrayList<>();
         for(StoryEntity story:stories) {
@@ -107,18 +139,5 @@ public class CommunityService {
         return new StoryDTO(story.getStoryId(), story.getTitle(), story.getUsername(), story.getContent(),
                 story.getTopic(), story.getLevel(), story.getIsCompleted(), story.getModifiedDate(), story.getVisibility(),
                 story.getLikeNum(), story.getDislikeNum());
-    }
-
-    private List<StoryDTO> getAllPublicStories() {
-        List<StoryDTO> retStories = new ArrayList<>();
-        List<StoryEntity> stories = storyRepository.findAllByVisibilityAndIsCompletedTrue(Visibility.PUBLIC);
-
-        return entityListToDto(stories);
-    }
-
-    private List<StoryDTO> getSortedByLike() {
-        List<StoryDTO> storyDTOS = getAllPublicStories();
-        Collections.sort(storyDTOS, (a, b) -> b.getLikeNum().compareTo(a.getLikeNum()));
-        return storyDTOS;
     }
 }
