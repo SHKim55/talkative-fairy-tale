@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @Entity
 @Getter
 @Setter
-@Table(name="storytable")
+@Table(name="story")
 public class StoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
