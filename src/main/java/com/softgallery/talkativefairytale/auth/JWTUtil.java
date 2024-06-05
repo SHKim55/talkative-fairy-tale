@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JWTUtil {
@@ -23,6 +24,10 @@ public class JWTUtil {
 
     public Boolean isExpired(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+    }
+
+    public static String getOnlyToken(String token) {
+        return token.split(" ")[1];
     }
 
     public String createJWT(String username, Long expireMs) {

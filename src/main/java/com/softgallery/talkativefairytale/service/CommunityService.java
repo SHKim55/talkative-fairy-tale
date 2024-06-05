@@ -1,10 +1,12 @@
 package com.softgallery.talkativefairytale.service;
 
-import com.softgallery.talkativefairytale.domain.Story;
+import com.softgallery.talkativefairytale.auth.JWTUtil;
 import com.softgallery.talkativefairytale.dto.StoryDTO;
 import com.softgallery.talkativefairytale.dto.StoryNumberDTO;
 import com.softgallery.talkativefairytale.entity.StoryEntity;
-import com.softgallery.talkativefairytale.repo.StoryRepository;
+import com.softgallery.talkativefairytale.entity.StoryEvaluationEntity;
+import com.softgallery.talkativefairytale.repository.StoryEvaluationRepository;
+import com.softgallery.talkativefairytale.repository.StoryRepository;
 import com.softgallery.talkativefairytale.service.story.Visibility;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,14 @@ import java.util.*;
 @Service
 public class CommunityService {
     private final StoryRepository storyRepository;
+    private final StoryEvaluationRepository storyEvaluationRepository;
 
-    public CommunityService(StoryRepository storyRepository) {
+    private final JWTUtil jwtUtil;
+
+    public CommunityService(StoryRepository storyRepository, StoryEvaluationRepository storyEvaluationRepository, JWTUtil jwtUtil) {
         this.storyRepository = storyRepository;
+        this.storyEvaluationRepository = storyEvaluationRepository;
+        this.jwtUtil = jwtUtil;
     }
 
     public StoryNumberDTO getRanker() {
@@ -30,18 +37,18 @@ public class CommunityService {
         List<StoryDTO> stories;
         if ("all".equalsIgnoreCase(topic)) {
             if ("recent".equalsIgnoreCase(type)) {
-                stories = entityListToDto(storyRepository.findAllByOrderByModifiedDateDesc());
+                stories = entityListToDto(storyRepository.findAllByVisibilityAndIsCompletedTrueOrderByModifiedDate(Visibility.PUBLIC));
             } else if ("like".equalsIgnoreCase(type)) {
-                stories = entityListToDto(storyRepository.findAllByOrderByLikeDesc());
+                stories = entityListToDto(storyRepository.findAllByVisibilityAndIsCompletedTrueOrderByLikeNum(Visibility.PUBLIC));
             } else {
                 // 예외 처리 또는 기본 동작을 수행
                 throw new RuntimeException("교훈: " + topic + " / 정렬 순서: " + type + "로 찾다가 에러 생김...");
             }
         } else {
             if ("recent".equalsIgnoreCase(type)) {
-                stories = entityListToDto(storyRepository.findByTopicOrderByModifiedDateDesc(topic));
+                stories = entityListToDto(storyRepository.findAllByTopicAndVisibilityAndIsCompletedTrueOrderByLikeNum(topic, Visibility.PUBLIC));
             } else if ("like".equalsIgnoreCase(type)) {
-                stories = entityListToDto(storyRepository.findByTopicOrderByLikeDesc(topic));
+                stories = entityListToDto(storyRepository.findAllByTopicAndVisibilityAndIsCompletedTrueOrderByLikeNum(topic, Visibility.PUBLIC));
             } else {
                 // 예외 처리 또는 기본 동작을 수행
                 throw new RuntimeException("교훈: " + topic + " / 정렬 순서: " + type + "로 찾다가 에러 생김...");
@@ -52,7 +59,7 @@ public class CommunityService {
     }
 
     public Set<String> getAllTopics() {
-        List<StoryEntity> storyEntities = storyRepository.findAll();
+        List<StoryEntity> storyEntities = storyRepository.findAllByVisibilityAndIsCompletedTrue(Visibility.PUBLIC);
         Set<String> topics = new HashSet<String>();
         for(StoryEntity story:storyEntities) {
             topics.add(story.getTopic());
@@ -60,7 +67,33 @@ public class CommunityService {
         return topics;
     }
 
+    public StoryDTO addEvaluation(Long likeOrUnlike, Long storyId, String token) {
+        String username = jwtUtil.getUsername(JWTUtil.getOnlyToken(token));
+        Optional<StoryEntity> story = storyRepository.findById(storyId);
 
+        if(story.isPresent()) {
+            if(storyEvaluationRepository.existsByUsernameAndStoryId(username, storyId)) {
+                throw new RuntimeException("이미 평가한 이야기 입니다");
+            }
+            else {
+                StoryEntity ret = story.get();
+                if(likeOrUnlike>0) {
+                    ret.setLikeNum(ret.getLikeNum()+1);
+                    storyRepository.save(ret);
+                }
+                else {
+                    ret.setDislikeNum(ret.getDislikeNum()+1);
+                    storyRepository.save(ret);
+                }
+
+                storyEvaluationRepository.save(new StoryEvaluationEntity(username, storyId));
+                return entityToDto(ret);
+            }
+        }
+        else {
+            throw new RuntimeException("아이디가 " + storyId + "인 동화가 존재하지 않습니다");
+        }
+    }
 
     private List<StoryDTO> entityListToDto(List<StoryEntity> stories) {
         List<StoryDTO> retStories = new ArrayList<>();
@@ -78,7 +111,7 @@ public class CommunityService {
 
     private List<StoryDTO> getAllPublicStories() {
         List<StoryDTO> retStories = new ArrayList<>();
-        List<StoryEntity> stories = storyRepository.findAllByVisibility(Visibility.PUBLIC);
+        List<StoryEntity> stories = storyRepository.findAllByVisibilityAndIsCompletedTrue(Visibility.PUBLIC);
 
         return entityListToDto(stories);
     }
