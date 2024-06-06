@@ -1,10 +1,27 @@
-package com.softgallery.talkativefairytale.moderation;
+package com.softgallery.talkativefairytale.service.moderation;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softgallery.talkativefairytale.dto.WordFilterDTO;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.softgallery.talkativefairytale.config.ChatGptConfig.API_KEY;
+
+@Service
+@PropertySource("classpath:openai.properties")
 public class WordFilter {
+    private static final String GPT_MODERATION_API_URL = "https://api.openai.com/v1/moderations";
     private static final List<String> VIOLENT_OR_CRIMINAL_WORDS = Arrays.asList(
             "폭력", "범죄", "살인", "강도", "강간", "납치", "테러", "학대", "폭행", "강탈",
             "방화", "절도", "협박", "마약", "성폭력", "성범죄", "사기", "도박", "인질", "매춘",
@@ -95,7 +112,7 @@ public class WordFilter {
             "허접", "쪽팔리다", "쪽팔린", "쪽팔려", "짜증나", "짜증나게", "짜증", "개짜증", "노답",
             "극혐", "관종", "꼰대", "꼴통", "좆밥", "개망나니", "싸가지없는", "돌대가리", "천치",
             "쓰레기같은", "좆같다", "엿같다", "좆까", "엿먹어라", "개자식", "개저씨", "개잡놈",
-            "개찌질이", "개쌍놈", "개쌍년", "개씹년", "개씹놈", "씨팔", "시팔", "시발", "시펄",
+            "개찌질이", "개쌍놈", "개쌍년", "개씹년", "개씹놈", "씨팔", "시팔", "시발", "시펄", "시1발", "씨1발",
             "씨펄", "개지랄", "개씹", "개씹새", "병쉰", "병싄", "병1신", "병2신", "병3신", "개좆",
             "좆까라", "좆털", "좆빨다", "좆빠는", "좆빨기", "좆빠는", "좆빨아라", "좆빨아줘", "좆빨이",
             "좆터리", "좆짜다", "좆맛나", "좆맛나게", "좆대가리", "좆도모른다", "좆모르다", "좆모름",
@@ -152,6 +169,22 @@ public class WordFilter {
             "난민", "난민보호", "난민문제"
     );
 
+    public static WordFilterDTO doFilterWithGptModeration(String input) {
+        // 로컬 단어 필터링을 먼저 수행
+        WordFilterDTO localFilterResult = hasBadWord(input);
+        if (localFilterResult.isBad()) {
+            return localFilterResult;
+        }
+
+        // GPT Moderation API 호출
+        WordFilterDTO gptFilterResult = callGptModerationApi(input);
+        if (gptFilterResult.isBad()) {
+            return gptFilterResult;
+        }
+
+        return new WordFilterDTO(false, "No prohibited words found");
+    }
+
     public static WordFilterDTO hasBadWord(String input) {
         for (String word : VIOLENT_OR_CRIMINAL_WORDS) {
             if (input.contains(word)) {
@@ -194,6 +227,44 @@ public class WordFilter {
             }
         }
         return new WordFilterDTO(false, "No prohibited words found");
+    }
+
+    private static WordFilterDTO callGptModerationApi(String input) {
+        RestTemplate restTemplate = new RestTemplate();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + API_KEY);
+        headers.set("Content-Type", "application/json");
+
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("input", input);
+
+        try {
+            String jsonRequest = objectMapper.writeValueAsString(requestBody);
+            HttpEntity<String> entity = new HttpEntity<>(jsonRequest, headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(
+                    GPT_MODERATION_API_URL,
+                    HttpMethod.POST,
+                    entity,
+                    String.class
+            );
+
+            String responseBody = response.getBody();
+            Map<String, Object> jsonResponse = objectMapper.readValue(responseBody, Map.class);
+            Map<String, Boolean> result = (Map<String, Boolean>)((List<Object>)jsonResponse.get("results")).get(0);
+
+            boolean flagged = result.get("flagged");
+            //String reason = result.containsKey("reason") ? (String) jsonResponse.get("reason") : "No specific reason provided";
+            String reason = "Gpt moderation";
+
+            return new WordFilterDTO(flagged, reason);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new WordFilterDTO(true, "Error calling GPT Moderation API: " + e.getMessage());
+        }
     }
 
 }

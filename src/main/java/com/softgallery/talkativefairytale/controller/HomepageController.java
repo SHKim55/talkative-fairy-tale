@@ -1,13 +1,14 @@
 package com.softgallery.talkativefairytale.controller;
 
 import com.softgallery.talkativefairytale.dto.UserDTO;
+import com.softgallery.talkativefairytale.dto.WordFilterDTO;
+import com.softgallery.talkativefairytale.service.moderation.WordFilter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
+@ResponseBody
 public class HomepageController {
     @GetMapping("/")
     public String home() {
@@ -19,9 +20,9 @@ public class HomepageController {
         return ResponseEntity.ok().body("auth OK");
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<String> testPost(UserDTO userDTO) {
-        return ResponseEntity.ok().body("hello world");
+    @PostMapping("/test/moderation")
+    public WordFilterDTO testPost(@RequestBody UserDTO userDTO) {
+        return WordFilter.doFilterWithGptModeration(userDTO.getUsername());
     }
 
     @PostMapping("/login")
