@@ -1,6 +1,7 @@
 package com.softgallery.talkativefairytale.entity;
 
 import com.softgallery.talkativefairytale.service.story.Visibility;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
@@ -28,7 +29,7 @@ public class StoryEntity {
     private String username;
 
     @Column
-    @NotNull
+    @Nullable
     private String topic;
 
     @Column
