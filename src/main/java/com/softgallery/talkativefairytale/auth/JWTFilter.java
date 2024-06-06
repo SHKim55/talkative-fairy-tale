@@ -22,8 +22,14 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // /login 요청에 대해 JWT 검증을 건너뜀
+        if ("/login".equals(request.getServletPath())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authorization = request.getHeader("Authorization");
-        if(authorization == null || !authorization.startsWith("Bearer ")) {
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
             System.out.println("Token null");
             filterChain.doFilter(request, response);
             return;
@@ -31,7 +37,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String token = authorization.split(" ")[1];
 
-        if(jwtUtil.isExpired(token)) {
+        if (jwtUtil.isExpired(token)) {
             System.out.println("token is expired");
             filterChain.doFilter(request, response);
             return;

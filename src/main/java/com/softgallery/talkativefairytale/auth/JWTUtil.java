@@ -31,6 +31,7 @@ public class JWTUtil {
     }
 
     public String createJWT(String username, Long expireMs) {
+        System.out.println(username);
         return Jwts.builder()
                 .claim("username", username)
                 .issuedAt(new Date(System.currentTimeMillis()))
