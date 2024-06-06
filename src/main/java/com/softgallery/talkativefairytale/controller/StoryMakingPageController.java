@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+@ResponseBody
 @RequestMapping("/make")
 public class StoryMakingPageController {
     private final StoryMakingService storyMakingService;
@@ -30,7 +32,7 @@ public class StoryMakingPageController {
     }
 
     @GetMapping("/{storyId}")
-    public ResponseEntity<List<Map<String, String>>> loadStory(@RequestHeader(name = "Authorization") String userToken,
+    public ResponseEntity<List<String>> loadStory(@RequestHeader(name = "Authorization") String userToken,
                                                                @PathVariable Long storyId) {
         return ResponseEntity.ok().body(storyMakingService.findStoryByStoryId(storyId));
     }
@@ -46,5 +48,11 @@ public class StoryMakingPageController {
     @PostMapping("/{storyId}/resume")
     public boolean resumeStory(@PathVariable Long storyId) {
         return storyMakingService.changeStoryStateIncomplete(storyId);
+    }
+
+    @PostMapping("/{storyId}/visible/{visibility}")
+    public boolean changeVisibility(@PathVariable Long storyId,
+                                    @PathVariable String visibility) {
+        return storyMakingService.changeStoryVisibility(storyId, visibility);
     }
 }
