@@ -73,7 +73,7 @@ public class StoryMakingService {
 
         return new StoryDTO(savedStory);
     }
-
+  
     public StoryDTO addContentToStory(String userToken, Long storyId, Map<String, String> userInput) {
         Optional<StoryEntity> storyEntityOptional = storyRepository.findById(storyId);
         if(storyEntityOptional.isEmpty()) throw new RuntimeException("No such story");
@@ -103,7 +103,7 @@ public class StoryMakingService {
         previousStoryDTO.setContent(addedSentence);
         previousStoryEntity.setContent(addedSentence);
         storyRepository.save(previousStoryEntity);
-
+  
         return previousStoryDTO;
     }
 
