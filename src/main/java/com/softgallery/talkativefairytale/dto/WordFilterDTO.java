@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class WordFilterDTO {
-    boolean flag;
+    boolean bad;
     String reason;
 
     public WordFilterDTO(boolean flag, String reason) {
-        this.flag = flag;
+        this.bad = flag;
         this.reason = reason;
     }
 }
