@@ -3,10 +3,11 @@ package com.softgallery.talkativefairytale.controller;
 import com.softgallery.talkativefairytale.dto.StoryDTO;
 import com.softgallery.talkativefairytale.dto.UserDTO;
 import com.softgallery.talkativefairytale.service.story.MainpageService;
-import com.softgallery.talkativefairytale.service.story.StoryMaking;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.softgallery.talkativefairytale.service.story.StoryMakingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/main")
 public class MainpageController {
     private final MainpageService mainpageService;
-    private final StoryMaking storyMaking;
+    private final StoryMakingService storyMaking;
 
     private ArrayList<StoryDTO> completeStories = new ArrayList<>();
     private ArrayList<StoryDTO> incompleteStories = new ArrayList<>();
 
-    public MainpageController(MainpageService mainpageService, StoryMaking storyMaking) {
+    public MainpageController(MainpageService mainpageService, StoryMakingService storyMaking) {
         this.mainpageService = mainpageService;
         this.storyMaking = storyMaking;
     }

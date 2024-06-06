@@ -4,9 +4,11 @@ import static java.lang.Long.parseLong;
 
 import com.softgallery.talkativefairytale.dto.StoryDTO;
 import com.softgallery.talkativefairytale.dto.UserDTO;
-import com.softgallery.talkativefairytale.service.story.StoryMaking;
+import com.softgallery.talkativefairytale.service.story.StoryMakingService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.softgallery.talkativefairytale.service.story.StoryMakingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/make")
 public class StoryMakingPageController {
-    private StoryMaking storyMaking;
+    private StoryMakingService storyMaking;
     private StoryDTO currentStory, prevStory;
 
-    public StoryMakingPageController(final StoryMaking storyMaking) {
+    public StoryMakingPageController(final StoryMakingService storyMaking) {
         this.storyMaking = storyMaking;
     }
 

@@ -71,29 +71,29 @@ public class StoryMakingService {
     }
 
     public StoryDTO addContentToStory(Long idStory, String newContent) {
-        Optional<StoryEntity> storyEntityOptional = storyRepository.findById(idStory);
-        if(storyEntityOptional.isEmpty()) throw new RuntimeException("No such story");
+//        Optional<StoryEntity> storyEntityOptional = storyRepository.findById(idStory);
+//        if(storyEntityOptional.isEmpty()) throw new RuntimeException("No such story");
+//
+//        StoryEntity previousStoryEntity = storyEntityOptional.get();
+//        StoryDTO previousStoryDTO = new StoryDTO(previousStoryEntity);
+//
+//        String updatedContent = previousStoryDTO.getContent() + "<user>\n" + newContent;
+//
+//        String question = createGPTQuery(previousStoryDTO.getTopic(),
+//                previousStoryDTO.getLevel(), updatedContent, characters);
+//
+//        ChatGptResponseDTO responseDTO = chatGptService.askQuestion(new QuestionRequestDTO(question));
+//        Choice choice = responseDTO.getChoices().get(0);
+//
+//        String addedSentence = updatedContent + "\n<gpt>\n" + choice.getMessage();
+//
+////        previousStoryDTO.setContent(addedSentence);
+////        storyDAO.updateStoryContent(previousStoryDTO.getId(), addedSentence);
+//
+//        previousStoryEntity.setContent(addedSentence);
+//        storyRepository.save(previousStoryEntity);
 
-        StoryEntity previousStoryEntity = storyEntityOptional.get();
-        StoryDTO previousStoryDTO = new StoryDTO(previousStoryEntity);
-
-        String updatedContent = previousStoryDTO.getContent() + "<user>\n" + newContent;
-
-        String question = createGPTQuery(previousStoryDTO.getTopic(),
-                previousStoryDTO.getLevel(), updatedContent, characters);
-
-        ChatGptResponseDTO responseDTO = chatGptService.askQuestion(new QuestionRequestDTO(question));
-        Choice choice = responseDTO.getChoices().get(0);
-
-        String addedSentence = updatedContent + "\n<gpt>\n" + choice.getMessage();
-
-//        previousStoryDTO.setContent(addedSentence);
-//        storyDAO.updateStoryContent(previousStoryDTO.getId(), addedSentence);
-
-        previousStoryEntity.setContent(addedSentence);
-        storyRepository.save(previousStoryEntity);
-
-        return previousStoryDTO;
+        return null;
     }
 
 //    public StoryDTO resumeMakingStory(StoryDTO previousStoryDTO) {
