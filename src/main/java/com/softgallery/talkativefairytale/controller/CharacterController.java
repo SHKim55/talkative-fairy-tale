@@ -48,15 +48,15 @@ public class CharacterController {
         return ResponseEntity.ok().body(testOutput);
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<CharacterDTO> insertCharacterTest(@RequestBody CharacterDTO characterDTO) {
-        CharacterDTO newCharacter = storyMakingService.insertNewCharacter(characterDTO);
-        return ResponseEntity.created(URI.create("/character/insert/" + newCharacter.getCharacterId())).body(newCharacter);
-    }
-
-    @GetMapping("/find/id/{id}")
-    public ResponseEntity<CharacterDTO> readCharacterIdTest(@PathVariable Long id) {
-        CharacterDTO foundCharacter = storyMakingService.findCharacterById(id);
-        return ResponseEntity.ok().body(foundCharacter);
-    }
+//    @PostMapping("/insert")
+//    public ResponseEntity<CharacterDTO> insertCharacterTest(@RequestBody CharacterDTO characterDTO) {
+//        CharacterDTO newCharacter = storyMakingService.insertNewCharacter(characterDTO);
+//        return ResponseEntity.created(URI.create("/character/insert/" + newCharacter.getCharacterId())).body(newCharacter);
+//    }
+//
+//    @GetMapping("/find/id/{id}")
+//    public ResponseEntity<CharacterDTO> readCharacterIdTest(@PathVariable Long id) {
+//        CharacterDTO foundCharacter = storyMakingService.findCharacterById(id);
+//        return ResponseEntity.ok().body(foundCharacter);
+//    }
 }

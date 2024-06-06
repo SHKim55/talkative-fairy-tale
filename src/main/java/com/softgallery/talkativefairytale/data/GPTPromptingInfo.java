@@ -34,9 +34,8 @@ public class GPTPromptingInfo {
         return this.adaptingKoreanStyleMessage;
     }
 
-    public String getStoryContinuingMessage(String topic, Long level, String prevStory) {
+    public String getStoryContinuingMessage(String prevStory) {
         String result = this.storyContinuingMessage + "\n\n"
-                + "이야기의 주제는 " + topic + " 이고, "
                 + "지금까지 만들어진 이야기는 다음과 같아\n\n"
                 + prevStory;
         return result;

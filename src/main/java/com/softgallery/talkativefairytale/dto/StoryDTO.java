@@ -62,11 +62,10 @@ public class StoryDTO {
         this.level = storyEntity.getLevel();
         this.isCompleted = storyEntity.getIsCompleted();
         this.modifiedDate = storyEntity.getModifiedDate();
+        this.visibility = storyEntity.getVisibility();
+        this.likeNum = storyEntity.getLikeNum();
+        this.dislikeNum = storyEntity.getDislikeNum();
     }
 
     public void setContent(String content) { this.content = content; }
-
-    public Boolean getCompleted() {
-        return isCompleted;
-    }
 }
