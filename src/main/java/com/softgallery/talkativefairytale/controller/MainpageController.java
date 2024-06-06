@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,14 +23,14 @@ public class MainpageController {
         this.mainpageService = mainpageService;
     }
 
-    @PostMapping("/list/incomplete")
+    @GetMapping("/list/incomplete")
     public ResponseEntity<List<StoryDTO>> loadIncompleteStories(@RequestHeader(name = "Authorization") String userToken) {
         List<StoryDTO> incompleteStories = mainpageService.findIncompleteStoriesMadeByUserName(userToken);
 
         return ResponseEntity.ok().body(incompleteStories);
     }
 
-    @PostMapping("/list/complete")
+    @GetMapping("/list/complete")
     public ResponseEntity<List<StoryDTO>> loadCompleteStories(@RequestHeader(name = "Authorization") String userToken) {
         List<StoryDTO> completeStories = mainpageService.findCompleteStoriesMadeByUserName(userToken);
 
