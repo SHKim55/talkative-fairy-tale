@@ -148,11 +148,12 @@ public class StoryMakingService {
         }
     }
 
-    public StoryDTO findStoryByStoryId(Long storyId) {
+    public List<Map<String, String>> findStoryByStoryId(Long storyId) {
         Optional<StoryEntity> storyEntityOptional = storyRepository.findById(storyId);
         if(storyEntityOptional.isEmpty()) throw new RuntimeException("No such story");
 
-        return new StoryDTO(storyEntityOptional.get());
+        StoryDTO storyDTO = new StoryDTO(storyEntityOptional.get());
+        return StoryDTO.parseContents(storyDTO);
     }
 
 //    public StoryDTO findStoryByUsernameAndId(Map<String, String> storyInfo) {

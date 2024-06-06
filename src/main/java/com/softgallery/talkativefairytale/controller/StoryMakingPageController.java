@@ -2,6 +2,7 @@ package com.softgallery.talkativefairytale.controller;
 
 import com.softgallery.talkativefairytale.dto.StoryDTO;
 import com.softgallery.talkativefairytale.service.story.StoryMakingService;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -29,10 +30,9 @@ public class StoryMakingPageController {
     }
 
     @GetMapping("/{storyId}")
-    public ResponseEntity<StoryDTO> loadStory(@RequestHeader(name = "Authorization") String userToken,
-                                              @PathVariable Long storyId) {
-        StoryDTO loadedStory = storyMakingService.findStoryByStoryId(storyId);
-        return ResponseEntity.ok().body(loadedStory);
+    public ResponseEntity<List<Map<String, String>>> loadStory(@RequestHeader(name = "Authorization") String userToken,
+                                                               @PathVariable Long storyId) {
+        return ResponseEntity.ok().body(storyMakingService.findStoryByStoryId(storyId));
     }
 
     @PostMapping("/{storyId}/append")
