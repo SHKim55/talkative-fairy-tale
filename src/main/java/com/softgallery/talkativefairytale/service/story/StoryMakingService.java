@@ -1,37 +1,40 @@
 package com.softgallery.talkativefairytale.service.story;
 
 import com.softgallery.talkativefairytale.data.GPTPromptingInfo;
-import com.softgallery.talkativefairytale.domain.Character;
 import com.softgallery.talkativefairytale.dto.*;
 
+import com.softgallery.talkativefairytale.entity.CharacterEntity;
 import com.softgallery.talkativefairytale.entity.StoryEntity;
+import com.softgallery.talkativefairytale.repository.CharacterRepository;
 import com.softgallery.talkativefairytale.repository.StoryRepository;
 import com.softgallery.talkativefairytale.service.character.CharacterService;
 import com.softgallery.talkativefairytale.service.chatGpt.ChatGptService;
 import com.softgallery.talkativefairytale.service.chatGpt.Choice;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StoryMaking {
+public class StoryMakingService {
     private final CharacterService characterService;
     private final ChatGptService chatGptService;
+    private final StoryRepository storyRepository;
+    private final CharacterRepository characterRepository;
     private final GPTPromptingInfo gptPromptingInfo = new GPTPromptingInfo();
 
-    private UserDTO currentUser;
-    private StoryDTO currentStory;
+    private StoryEntity currentStory;
     private ArrayList<CharacterDTO> characters;
 
-    private StoryRepository storyRepository;
-
-    public StoryMaking(final CharacterService characterService, final ChatGptService chatGptService, StoryRepository storyRepository) {
+    public StoryMakingService (final CharacterService characterService, final ChatGptService chatGptService,
+                       final StoryRepository storyRepository, final CharacterRepository characterRepository) {
         this.characterService = characterService;
         this.chatGptService = chatGptService;
         this.storyRepository = storyRepository;
+        this.characterRepository = characterRepository;
     }
 
-    private void updateCharacterList(Character character) {
+    private void updateCharacterList(CharacterEntity character) {
         characters.add(new CharacterDTO(character));
     }
 
@@ -43,36 +46,55 @@ public class StoryMaking {
 
         ChatGptResponseDTO responseDTO = chatGptService.askQuestion(new QuestionRequestDTO());
         Choice choice = responseDTO.getChoices().get(0);
-        currentStory = new StoryDTO(
-                emptyStoryDTO.getTitle(),
-                emptyStoryDTO.getUsername(),
-                question + "\n" + "<gpt>\n" + choice.getMessage(),
-                emptyStoryDTO.getTopic(),
-                emptyStoryDTO.getLevel(),
-                emptyStoryDTO.getCompleted(),
-                emptyStoryDTO.getModifiedDate());
 
-        storyRepository.save(dtoToEntity(currentStory));
+        currentStory = new StoryEntity();
+        currentStory.setTitle(emptyStoryDTO.getTitle());
+        currentStory.setUsername(emptyStoryDTO.getUsername());
+        currentStory.setTopic(emptyStoryDTO.getTopic());
+        currentStory.setLevel(currentStory.getLevel());
+        currentStory.setIsCompleted(emptyStoryDTO.getCompleted());
+        currentStory.setContent(question + "\n" + "<gpt>\n" + choice.getMessage());
+        currentStory.setModifiedDate(emptyStoryDTO.getModifiedDate());
 
-        return currentStory;
+//        currentStory = new StoryEntity(
+//                emptyStoryDTO.getTitle(),
+//                emptyStoryDTO.getUsername(),
+//                emptyStoryDTO.getTopic(),
+//                emptyStoryDTO.getLevel(),
+//                emptyStoryDTO.getCompleted(),
+//                question + "\n" + "<gpt>\n" + choice.getMessage(),
+//                emptyStoryDTO.getModifiedDate());
+
+        StoryEntity savedStory = storyRepository.save(currentStory);
+
+        return new StoryDTO(savedStory);
     }
 
-//    public StoryDTO addContentToStory(Long idStory, String newContent) {
-//        StoryDTO previousStoryDTO = new StoryDTO(storyDAO.findStoriesById(idStory));
-//        String updatedContent = previousStoryDTO.getContent() + "<user>\n" + newContent;
-//
-//        String question = createGPTQuery(previousStoryDTO.getTopic(),
-//                previousStoryDTO.getLevel(), updatedContent, characters);
-//
-//        ChatGptResponseDTO responseDTO = chatGptService.askQuestion(new QuestionRequestDTO(question));
-//        Choice choice = responseDTO.getChoices().get(0);
-//
-//        String addedSentence = updatedContent + "\n<gpt>\n" + choice.getMessage();
-//
+    public StoryDTO addContentToStory(Long idStory, String newContent) {
+        Optional<StoryEntity> storyEntityOptional = storyRepository.findById(idStory);
+        if(storyEntityOptional.isEmpty()) throw new RuntimeException("No such story");
+
+        StoryEntity previousStoryEntity = storyEntityOptional.get();
+        StoryDTO previousStoryDTO = new StoryDTO(previousStoryEntity);
+
+        String updatedContent = previousStoryDTO.getContent() + "<user>\n" + newContent;
+
+        String question = createGPTQuery(previousStoryDTO.getTopic(),
+                previousStoryDTO.getLevel(), updatedContent, characters);
+
+        ChatGptResponseDTO responseDTO = chatGptService.askQuestion(new QuestionRequestDTO(question));
+        Choice choice = responseDTO.getChoices().get(0);
+
+        String addedSentence = updatedContent + "\n<gpt>\n" + choice.getMessage();
+
 //        previousStoryDTO.setContent(addedSentence);
 //        storyDAO.updateStoryContent(previousStoryDTO.getId(), addedSentence);
-//        return previousStoryDTO;
-//    }
+
+        previousStoryEntity.setContent(addedSentence);
+        storyRepository.save(previousStoryEntity);
+
+        return previousStoryDTO;
+    }
 
 //    public StoryDTO resumeMakingStory(StoryDTO previousStoryDTO) {
 //        characters = new ArrayList<>(List.of(characterService.selectCharacters()));
@@ -123,53 +145,43 @@ public class StoryMaking {
 //    public StoryDTO findStoryByUsernameAndId(Map<String, String> storyInfo) {
 //        Story story = storyDAO.findIncompleteStoriesByName(storyInfo.);
 //    }
-//
-//    public CharacterDTO findCharacterById(Long characterId) {
-//        Character character = charae
+
+    public CharacterDTO findCharacterById(Long characterId) {
 //        Character character = characterDAO.findCharacterById(characterId);
 //        System.out.println("Found character : " + character.getName());
 //        updateCharacterList(character);
 //        return new CharacterDTO(character);
-//    }
-//
-//    public CharacterDTO findCharacterByName(String characterName) {
+
+        Optional<CharacterEntity> characterOptional = characterRepository.findByCharacterId(characterId);
+        CharacterEntity character = characterOptional.get();
+        System.out.println("Found character : " + character.getName());
+        updateCharacterList(character);
+        return new CharacterDTO(character);
+    }
+
+    public CharacterDTO findCharacterByName(String characterName) {
 //        Character character = characterDAO.findCharacterByName(characterName);
 //        System.out.println("Found character : " + character.getName());
 //        updateCharacterList(character);
 //        return new CharacterDTO(character);
-//    }
 
-//    public CharacterDTO insertNewCharacter(CharacterDTO characterDTO) {
-//        Character character = new Character(
-//                characterDTO.getName(),
-//                characterDTO.getGender(),
-//                characterDTO.getPersonalityGood(),
-//                characterDTO.getPersonalityBad(),
-//                characterDTO.getPersonalityNormal(),
-//                characterDTO.getWhoMade()
-//        );
-//
-//        Long id = characterDAO.insertNewCharacter(character);
-//        return this.findCharacterById(id);
-//    }
-
-    private StoryDTO entityToDto(StoryEntity story) {
-        return new StoryDTO(story.getStoryId(), story.getTitle(), story.getUsername(), story.getContent(), story.getTopic(),
-                story.getLevel(), story.getIsCompleted(), story.getModifiedDate(), story.getVisibility(), story.getLikeNum(), story.getDislikeNum());
+        Optional<CharacterEntity> characterOptional = characterRepository.findByName(characterName);
+        CharacterEntity character = characterOptional.get();
+        System.out.println("Found character : " + character.getName());
+        updateCharacterList(character);
+        return new CharacterDTO(character);
     }
-    private StoryEntity dtoToEntity(StoryDTO storyDTO) {
-        return new StoryEntity(
-                storyDTO.getStoryId(),
-                storyDTO.getTitle(),
-                storyDTO.getUsername(),
-                storyDTO.getTopic(),
-                storyDTO.getLevel(),
-                storyDTO.getCompleted(),
-                storyDTO.getContent(),
-                storyDTO.getModifiedDate(),
-                storyDTO.getVisibility(),
-                storyDTO.getLikeNum(),
-                storyDTO.getDislikeNum()
-        );
+
+    public CharacterDTO insertNewCharacter(CharacterDTO characterDTO) {
+        CharacterEntity character = new CharacterEntity();
+        character.setName(characterDTO.getName());
+        character.setGender(characterDTO.getGender());
+        character.setPersonalityGood(characterDTO.getPersonalityGood());
+        character.setPersonalityBad(characterDTO.getPersonalityBad());
+        character.setPersonalityNormal(characterDTO.getPersonalityNormal());
+        character.setWhoMade(character.getWhoMade());
+
+        CharacterEntity savedCharacter = characterRepository.save(character);
+        return new CharacterDTO(savedCharacter);
     }
 }

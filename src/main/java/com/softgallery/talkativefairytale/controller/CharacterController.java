@@ -2,7 +2,7 @@ package com.softgallery.talkativefairytale.controller;
 
 import com.softgallery.talkativefairytale.dto.CharacterDTO;
 import com.softgallery.talkativefairytale.service.character.CharacterService;
-import com.softgallery.talkativefairytale.service.story.StoryMaking;
+import com.softgallery.talkativefairytale.service.story.StoryMakingService;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/character")
 public class CharacterController {
     private final CharacterService characterService;
-    private final StoryMaking storyMaking;
+    private final StoryMakingService storyMakingService;
 
-    public CharacterController(CharacterService characterService, StoryMaking storyMaking) {
-        this.storyMaking = storyMaking;
+    public CharacterController(CharacterService characterService, StoryMakingService storyMakingService) {
+        this.storyMakingService = storyMakingService;
         this.characterService = characterService;
     }
 
@@ -47,16 +47,16 @@ public class CharacterController {
         }
         return ResponseEntity.ok().body(testOutput);
     }
-//
-//    @PostMapping("/insert")
-//    public ResponseEntity<CharacterDTO> insertCharacterTest(@RequestBody CharacterDTO characterDTO) {
-//        CharacterDTO newCharacter = storyMaking.insertNewCharacter(characterDTO);
-//        return ResponseEntity.created(URI.create("/character/insert/" + newCharacter.getCharacterId())).body(newCharacter);
-//    }
-//
-//    @GetMapping("/find/id/{id}")
-//    public ResponseEntity<CharacterDTO> readCharacterIdTest(@PathVariable Long id) {
-//        CharacterDTO foundCharacter = storyMaking.findCharacterById(id);
-//        return ResponseEntity.ok().body(foundCharacter);
-//    }
+
+    @PostMapping("/insert")
+    public ResponseEntity<CharacterDTO> insertCharacterTest(@RequestBody CharacterDTO characterDTO) {
+        CharacterDTO newCharacter = storyMakingService.insertNewCharacter(characterDTO);
+        return ResponseEntity.created(URI.create("/character/insert/" + newCharacter.getCharacterId())).body(newCharacter);
+    }
+
+    @GetMapping("/find/id/{id}")
+    public ResponseEntity<CharacterDTO> readCharacterIdTest(@PathVariable Long id) {
+        CharacterDTO foundCharacter = storyMakingService.findCharacterById(id);
+        return ResponseEntity.ok().body(foundCharacter);
+    }
 }
