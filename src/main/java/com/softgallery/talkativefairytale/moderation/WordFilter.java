@@ -1,4 +1,6 @@
 package com.softgallery.talkativefairytale.moderation;
+import com.softgallery.talkativefairytale.dto.WordFilterDTO;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,7 +12,7 @@ public class WordFilter {
             "살인 사건", "강도 사건", "성범죄 사건", "사기 사건", "폭력 사건", "폭행 사건", "방화 사건",
             "협박 사건", "마약 사건", "성폭행", "성희롱", "성추행", "성적 학대", "성적 착취", "범죄 조직", "폭동",
             "갈취", "폭주", "무단 침입", "괴롭힘", "폭언", "불법", "검거",
-            "구속", "체포", "탈옥", "무차별", "싸움", "구타", "인신매매", "학살", "격투", "자해", "독극물",
+            "구속", "체포", "탈옥", "무차별", "싸움", "구타", "인신매매", "학살", "자해", "독극물",
             "독살", "폭력배", "암살", "파괴", "전쟁", "전투", "무력", "패싸움", "경찰", "범죄율", "범죄 통계",
             "교도소", "보복", "조직폭력", "강압", "중독", "방치", "적대감", "분노", "증오", "패륜", "반사회적",
             "공포", "불안", "절망", "추락", "교살", "질식", "협박 전화", "흉기", "밀매", "무기 거래", "범죄 계획",
@@ -150,8 +152,49 @@ public class WordFilter {
             "난민", "난민보호", "난민문제"
     );
 
-    public static List<String> getViolentOrCriminalWords() {
-        return VIOLENT_OR_CRIMINAL_WORDS;
+    public static WordFilterDTO hasBadWord(String input) {
+        for (String word : VIOLENT_OR_CRIMINAL_WORDS) {
+            if (input.contains(word)) {
+                return new WordFilterDTO(true, "Contains violent or criminal words: " + word);
+            }
+        }
+        for (String word : SEXUALLY_OFFENSIVE_WORDS) {
+            if (input.contains(word)) {
+                return new WordFilterDTO(true, "Contains sexually offensive words: " + word);
+            }
+        }
+        for (String word : SELF_HARM_WORDS) {
+            if (input.contains(word)) {
+                return new WordFilterDTO(true, "Contains self-harm words: " + word);
+            }
+        }
+        for (String word : HATEFUL_WORDS) {
+            if (input.contains(word)) {
+                return new WordFilterDTO(true, "Contains hateful words: " + word);
+            }
+        }
+        for (String word : SEXUAL_MINOR_WORDS) {
+            if (input.contains(word)) {
+                return new WordFilterDTO(true, "Contains sexual minor words: " + word);
+            }
+        }
+        for (String word : GRAPHIC_VIOLENCE_WORDS) {
+            if (input.contains(word)) {
+                return new WordFilterDTO(true, "Contains graphic violence words: " + word);
+            }
+        }
+        for (String word : KOREAN_PROFANITY_WORDS) {
+            if (input.contains(word)) {
+                return new WordFilterDTO(true, "Contains Korean profanity words: " + word);
+            }
+        }
+        for (String word : DIFFICULT_WORDS_FOR_CHILDREN) {
+            if (input.contains(word)) {
+                return new WordFilterDTO(true, "Contains difficult words for children: " + word);
+            }
+        }
+        return new WordFilterDTO(false, "No prohibited words found");
     }
+
 }
 
