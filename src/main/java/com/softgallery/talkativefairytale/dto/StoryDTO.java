@@ -4,6 +4,12 @@ import com.softgallery.talkativefairytale.entity.StoryEntity;
 import java.time.LocalDateTime;
 
 import com.softgallery.talkativefairytale.service.story.Visibility;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Repository;
@@ -23,6 +29,8 @@ public class StoryDTO {
     private Visibility visibility;
     private Long likeNum;
     private Long dislikeNum;
+
+    private List<String> parsedStory = null;
 
     public StoryDTO() { }
 
@@ -68,4 +76,27 @@ public class StoryDTO {
     }
 
     public void setContent(String content) { this.content = content; }
+
+    public static List<Map<String, String>> parseContents(StoryDTO storyDTO) {
+        List<Map<String, String>> parsedContents = new ArrayList<>();
+
+        // 정규 표현식을 사용하여 <태그>를 기준으로 문자열을 분리
+        Pattern pattern = Pattern.compile("(<[^>]+>)(.*?)(?=<[^>]+>|$)", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(storyDTO.getContent());
+
+        while (matcher.find()) {
+            String tag = matcher.group(1);
+            String content = matcher.group(2).trim();
+
+            // 태그와 내용을 출력
+            System.out.println("Tag: " + tag);
+            System.out.println("Content: " + content);
+
+            HashMap<String, String> paragraph = new HashMap<>();
+            paragraph.put(tag, content);
+            parsedContents.add(paragraph);
+        }
+
+        return parsedContents;
+    }
 }
