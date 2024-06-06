@@ -20,13 +20,13 @@ public interface StoryRepository extends JpaRepository<StoryEntity, Long> {
     List<StoryEntity> findByTopic(String topic);
 
     // Topic 및 Type에 따른 정렬된 데이터 조회
-    List<StoryEntity> findAllByTopicAndVisibilityAndIsCompletedTrueOrderByModifiedDate(String topic, Visibility visibility);
-    List<StoryEntity> findAllByTopicAndVisibilityAndIsCompletedTrueOrderByLikeNum(String topic, Visibility visibility);
+    List<StoryEntity> findAllByTopicAndVisibilityAndIsCompletedTrueOrderByModifiedDateDesc(String topic, Visibility visibility);
+    List<StoryEntity> findAllByTopicAndVisibilityAndIsCompletedTrueOrderByLikeNumDesc(String topic, Visibility visibility);
 
 
     // 모든 데이터를 최근 수정일 또는 좋아요 숫자로 정렬하여 조회
-    List<StoryEntity> findAllByVisibilityAndIsCompletedTrueOrderByModifiedDate(Visibility visibility);
-    List<StoryEntity> findAllByVisibilityAndIsCompletedTrueOrderByLikeNum(Visibility visibility);
+    List<StoryEntity> findAllByVisibilityAndIsCompletedTrueOrderByModifiedDateDesc(Visibility visibility);
+    List<StoryEntity> findAllByVisibilityAndIsCompletedTrueOrderByLikeNumDesc(Visibility visibility);
 
     List<StoryEntity> findAllByVisibilityAndIsCompletedTrue(Visibility visibility);
     List<StoryEntity> findAllByTopic(String topic);

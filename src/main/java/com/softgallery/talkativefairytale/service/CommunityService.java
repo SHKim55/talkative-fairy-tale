@@ -2,6 +2,7 @@ package com.softgallery.talkativefairytale.service;
 
 import com.softgallery.talkativefairytale.auth.JWTUtil;
 import com.softgallery.talkativefairytale.dto.StoryDTO;
+import com.softgallery.talkativefairytale.dto.StoryInfoDTO;
 import com.softgallery.talkativefairytale.dto.StoryNumberDTO;
 import com.softgallery.talkativefairytale.entity.StoryEntity;
 import com.softgallery.talkativefairytale.entity.StoryEvaluationEntity;
@@ -27,41 +28,38 @@ public class CommunityService {
 
     public StoryNumberDTO getRanker(String token) {
         String username = jwtUtil.getUsername(JWTUtil.getOnlyToken(token));
-        List<StoryDTO> storyDTOS = getSortedByLike();
+        List<StoryInfoDTO> storyDTOS = getSortedByLike();
         int numberOfItems = Math.min(3, storyDTOS.size());
 
-        List<StoryDTO> rankers = storyDTOS.subList(0, numberOfItems);
-        List<Boolean> evaluated = this.getEvaluated(rankers, username);
+        List<StoryInfoDTO> rankers = storyDTOS.subList(0, numberOfItems);
 
-        return new StoryNumberDTO((long)numberOfItems, rankers, evaluated);
+        return new StoryNumberDTO((long)numberOfItems, rankers);
     }
 
     public StoryNumberDTO getBy(String topic, String type, String token) {
         String username = jwtUtil.getUsername(JWTUtil.getOnlyToken(token));
-        List<StoryDTO> stories;
+        List<StoryInfoDTO> stories;
         if ("all".equalsIgnoreCase(topic)) {
             if ("recent".equalsIgnoreCase(type)) {
-                stories = entityListToDto(storyRepository.findAllByVisibilityAndIsCompletedTrueOrderByModifiedDate(Visibility.PUBLIC));
+                stories = entityListToInfo(storyRepository.findAllByVisibilityAndIsCompletedTrueOrderByModifiedDateDesc(Visibility.PUBLIC));
             } else if ("like".equalsIgnoreCase(type)) {
-                stories = entityListToDto(storyRepository.findAllByVisibilityAndIsCompletedTrueOrderByLikeNum(Visibility.PUBLIC));
+                stories = entityListToInfo(storyRepository.findAllByVisibilityAndIsCompletedTrueOrderByLikeNumDesc(Visibility.PUBLIC));
             } else {
                 // 예외 처리 또는 기본 동작을 수행
                 throw new RuntimeException("교훈: " + topic + " / 정렬 순서: " + type + "로 찾다가 에러 생김...");
             }
         } else {
             if ("recent".equalsIgnoreCase(type)) {
-                stories = entityListToDto(storyRepository.findAllByTopicAndVisibilityAndIsCompletedTrueOrderByLikeNum(topic, Visibility.PUBLIC));
+                stories = entityListToInfo(storyRepository.findAllByTopicAndVisibilityAndIsCompletedTrueOrderByModifiedDateDesc(topic, Visibility.PUBLIC));
             } else if ("like".equalsIgnoreCase(type)) {
-                stories = entityListToDto(storyRepository.findAllByTopicAndVisibilityAndIsCompletedTrueOrderByLikeNum(topic, Visibility.PUBLIC));
+                stories = entityListToInfo(storyRepository.findAllByTopicAndVisibilityAndIsCompletedTrueOrderByLikeNumDesc(topic, Visibility.PUBLIC));
             } else {
                 // 예외 처리 또는 기본 동작을 수행
                 throw new RuntimeException("교훈: " + topic + " / 정렬 순서: " + type + "로 찾다가 에러 생김...");
             }
         }
 
-        List<Boolean> evaluated = this.getEvaluated(stories, username);
-
-        return new StoryNumberDTO((long)stories.size(), stories, evaluated);
+        return new StoryNumberDTO((long)stories.size(), stories);
     }
 
     public Set<String> getAllTopics() {
@@ -73,7 +71,7 @@ public class CommunityService {
         return topics;
     }
 
-    public StoryDTO addEvaluation(Long likeOrUnlike, Long storyId, String token) {
+    public StoryInfoDTO addEvaluation(Long likeOrUnlike, Long storyId, String token) {
         String username = jwtUtil.getUsername(JWTUtil.getOnlyToken(token));
         Optional<StoryEntity> story = storyRepository.findById(storyId);
 
@@ -93,7 +91,7 @@ public class CommunityService {
                 }
 
                 storyEvaluationRepository.save(new StoryEvaluationEntity(username, storyId));
-                return entityToDto(ret);
+                return entityToInfo(ret);
             }
         }
         else {
@@ -101,24 +99,24 @@ public class CommunityService {
         }
     }
 
-    private List<StoryDTO> getAllPublicStories() {
-        List<StoryDTO> retStories = new ArrayList<>();
+    private List<StoryInfoDTO> getAllPublicStories() {
+        List<StoryInfoDTO> retStories = new ArrayList<>();
         List<StoryEntity> stories = storyRepository.findAllByVisibilityAndIsCompletedTrue(Visibility.PUBLIC);
 
-        return entityListToDto(stories);
+        return entityListToInfo(stories);
     }
 
-    private List<StoryDTO> getSortedByLike() {
-        List<StoryDTO> storyDTOS = getAllPublicStories();
+    private List<StoryInfoDTO> getSortedByLike() {
+        List<StoryInfoDTO> storyDTOS = getAllPublicStories();
         Collections.sort(storyDTOS, (a, b) -> b.getLikeNum().compareTo(a.getLikeNum()));
         return storyDTOS;
     }
 
-    private List<Boolean> getEvaluated(List<StoryDTO> storyDTOS, String username) {
+    private List<Boolean> getEvaluated(List<StoryInfoDTO> storyDTOS, String username) {
         List<Boolean> evaluated = new ArrayList<Boolean>();
 
-        for(StoryDTO storyDTO:storyDTOS) {
-            if(storyDTO.getUsername().equals(username)) {
+        for(StoryInfoDTO storyDTO:storyDTOS) {
+            if(storyEvaluationRepository.existsByUsernameAndStoryId(username, storyDTO.getStoryId())) {
                 evaluated.add(true);
                 continue;
             }
@@ -140,4 +138,18 @@ public class CommunityService {
                 story.getTopic(), story.getLevel(), story.getIsCompleted(), story.getModifiedDate(), story.getVisibility(),
                 story.getLikeNum(), story.getDislikeNum());
     }
+
+    private List<StoryInfoDTO> entityListToInfo(List<StoryEntity> stories) {
+        List<StoryInfoDTO> retStories = new ArrayList<>();
+        for(StoryEntity story:stories) {
+            retStories.add(entityToInfo(story));
+        }
+        return retStories;
+    }
+
+    private StoryInfoDTO entityToInfo(StoryEntity story) {
+        return new StoryInfoDTO(story.getStoryId(), story.getTitle(), story.getUsername(), story.getTopic(),
+                story.getModifiedDate(), story.getLikeNum(), story.getDislikeNum());
+    }
+
 }

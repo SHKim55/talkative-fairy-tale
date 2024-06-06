@@ -47,6 +47,7 @@ public class StoryMakingService {
     public StoryDTO createStory(String userToken) {
 //        characters = new ArrayList<>(List.of(characterService.selectCharacters()));
         String username = jwtUtil.getUsername(JWTUtil.getOnlyToken(userToken));
+        System.out.println("누가 죄인인가" + username);
 
         // 시스템 프롬프트 적용
         Message message = new Message("system", createGPTQuery(""));

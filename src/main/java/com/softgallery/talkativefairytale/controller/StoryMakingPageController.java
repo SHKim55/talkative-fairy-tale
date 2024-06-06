@@ -25,6 +25,7 @@ public class StoryMakingPageController {
 
     @PostMapping("/")
     public ResponseEntity<StoryDTO> makeStory(@RequestHeader(name = "Authorization") String userToken) {
+        System.out.println("userToken " + userToken);
         StoryDTO currentStory = storyMakingService.createStory(userToken);
         return ResponseEntity.ok().body(currentStory);
     }

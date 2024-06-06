@@ -7,12 +7,11 @@ import java.util.List;
 @Getter
 public class StoryNumberDTO {
     private Long storyNum;
-    private List<StoryDTO> data;
-    private List<Boolean> evaluated;
+    private List<StoryInfoDTO> data;
 
     public StoryNumberDTO(){}
 
-    public StoryNumberDTO(Long storyNum, List<StoryDTO> data, List<Boolean> evaluated) {
+    public StoryNumberDTO(Long storyNum, List<StoryInfoDTO> data) {
         this.storyNum = storyNum;
         this.data = data;
     }
