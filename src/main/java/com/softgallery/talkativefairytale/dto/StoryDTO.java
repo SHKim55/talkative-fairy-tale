@@ -77,8 +77,8 @@ public class StoryDTO {
 
     public void setContent(String content) { this.content = content; }
 
-    public static List<Map<String, String>> parseContents(StoryDTO storyDTO) {
-        List<Map<String, String>> parsedContents = new ArrayList<>();
+    public static List<String> parseContents(StoryDTO storyDTO) {
+        List<String> parsedContents = new ArrayList<>();
 
         // 정규 표현식을 사용하여 <태그>를 기준으로 문자열을 분리
         Pattern pattern = Pattern.compile("(<[^>]+>)(.*?)(?=<[^>]+>|$)", Pattern.DOTALL);
@@ -92,9 +92,7 @@ public class StoryDTO {
             System.out.println("Tag: " + tag);
             System.out.println("Content: " + content);
 
-            HashMap<String, String> paragraph = new HashMap<>();
-            paragraph.put(tag, content);
-            parsedContents.add(paragraph);
+            parsedContents.add(content);
         }
 
         return parsedContents;

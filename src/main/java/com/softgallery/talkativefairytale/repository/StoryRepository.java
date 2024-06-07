@@ -31,7 +31,7 @@ public interface StoryRepository extends JpaRepository<StoryEntity, Long> {
     List<StoryEntity> findAllByVisibilityAndIsCompletedTrue(Visibility visibility);
     List<StoryEntity> findAllByTopic(String topic);
 
-    List<StoryEntity> findAllByUsernameAndIsCompleted(String username, Boolean isCompleted);
+    List<StoryEntity> findAllByUsernameAndIsCompletedOrderByModifiedDateDesc(String username, Boolean isCompleted);
 
 
     @Override

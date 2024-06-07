@@ -1,6 +1,7 @@
 package com.softgallery.talkativefairytale.controller;
 
 import com.softgallery.talkativefairytale.dto.StoryDTO;
+import com.softgallery.talkativefairytale.dto.StoryInfoDTO;
 import com.softgallery.talkativefairytale.service.story.MainpageService;
 
 import java.util.List;
@@ -21,15 +22,15 @@ public class MainpageController {
     }
 
     @GetMapping("/list/incomplete")
-    public ResponseEntity<List<StoryDTO>> loadIncompleteStories(@RequestHeader(name = "Authorization") String userToken) {
-        List<StoryDTO> incompleteStories = mainpageService.findIncompleteStoriesMadeByUserName(userToken);
+    public ResponseEntity<List<StoryInfoDTO>> loadIncompleteStories(@RequestHeader(name = "Authorization") String userToken) {
+        List<StoryInfoDTO> incompleteStories = mainpageService.findIncompleteStoriesMadeByUserName(userToken);
 
         return ResponseEntity.ok().body(incompleteStories);
     }
 
     @GetMapping("/list/complete")
-    public ResponseEntity<List<StoryDTO>> loadCompleteStories(@RequestHeader(name = "Authorization") String userToken) {
-        List<StoryDTO> completeStories = mainpageService.findCompleteStoriesMadeByUserName(userToken);
+    public ResponseEntity<List<StoryInfoDTO>> loadCompleteStories(@RequestHeader(name = "Authorization") String userToken) {
+        List<StoryInfoDTO> completeStories = mainpageService.findCompleteStoriesMadeByUserName(userToken);
 
         return ResponseEntity.ok().body(completeStories);
     }
