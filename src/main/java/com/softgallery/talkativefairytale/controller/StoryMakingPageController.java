@@ -1,6 +1,7 @@
 package com.softgallery.talkativefairytale.controller;
 
 import com.softgallery.talkativefairytale.dto.StoryDTO;
+import com.softgallery.talkativefairytale.dto.StoryReadingDTO;
 import com.softgallery.talkativefairytale.service.story.StoryMakingService;
 import java.util.List;
 import java.util.Map;
@@ -55,5 +56,10 @@ public class StoryMakingPageController {
     public boolean changeVisibility(@PathVariable Long storyId,
                                     @PathVariable String visibility) {
         return storyMakingService.changeStoryVisibility(storyId, visibility);
+    }
+
+    @GetMapping("/info/{id}")
+    public StoryReadingDTO getStory(@PathVariable("id") Long storyId, @RequestHeader("Authorization") String token) {
+        return storyMakingService.getStory(storyId, token);
     }
 }

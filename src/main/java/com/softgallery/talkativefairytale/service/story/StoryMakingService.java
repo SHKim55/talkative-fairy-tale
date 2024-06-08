@@ -7,7 +7,9 @@ import com.softgallery.talkativefairytale.dto.*;
 import com.softgallery.talkativefairytale.entity.CharacterEntity;
 import com.softgallery.talkativefairytale.entity.StoryEntity;
 import com.softgallery.talkativefairytale.repository.CharacterRepository;
+import com.softgallery.talkativefairytale.repository.StoryEvaluationRepository;
 import com.softgallery.talkativefairytale.repository.StoryRepository;
+import com.softgallery.talkativefairytale.service.CommunityService;
 import com.softgallery.talkativefairytale.service.character.CharacterService;
 import com.softgallery.talkativefairytale.service.chatGpt.ChatGptService;
 import com.softgallery.talkativefairytale.service.chatGpt.Choice;
@@ -28,18 +30,21 @@ public class StoryMakingService {
     private final ChatGptService chatGptService;
     private final StoryRepository storyRepository;
     private final CharacterRepository characterRepository;
+
+    private final StoryEvaluationRepository storyEvaluationRepository;
     private final GPTPromptingInfo gptPromptingInfo = new GPTPromptingInfo();
     private final JWTUtil jwtUtil;
 
     private ArrayList<CharacterDTO> characters;
 
     public StoryMakingService (final CharacterService characterService, final ChatGptService chatGptService,
-                               final StoryRepository storyRepository, final CharacterRepository characterRepository,
+                               final StoryRepository storyRepository, final CharacterRepository characterRepository, StoryEvaluationRepository storyEvaluationRepository,
                                final JWTUtil jwtUtil) {
         this.characterService = characterService;
         this.chatGptService = chatGptService;
         this.storyRepository = storyRepository;
         this.characterRepository = characterRepository;
+        this.storyEvaluationRepository = storyEvaluationRepository;
         this.jwtUtil = jwtUtil;
     }
 
@@ -255,6 +260,24 @@ public class StoryMakingService {
 
         storyRepository.save(storyEntity);
         return true;
+    }
+
+    public StoryReadingDTO getStory(Long storyId, String token) {
+        Optional<StoryEntity> story = storyRepository.findById(storyId);
+        if(!story.isPresent()) throw new RuntimeException("story entity 없음");
+        else {
+            String username = jwtUtil.getUsername(JWTUtil.getOnlyToken(token));
+            StoryEntity currStory = story.get();
+
+            Boolean isEvaluated = storyEvaluationRepository.existsByUsernameAndStoryId(username, currStory.getStoryId());
+
+            StoryReadingDTO storyReadingDTO = new StoryReadingDTO(
+                    currStory.getStoryId(), currStory.getTitle(), currStory.getUsername(),
+                    currStory.getTopic(), currStory.getIsCompleted(), currStory.getModifiedDate(), currStory.getVisibility(),
+                    currStory.getLikeNum(), currStory.getDislikeNum(), username.equals(currStory.getUsername()), isEvaluated
+                    );
+            return storyReadingDTO;
+        }
     }
 
 //    public StoryDTO findStoryByUsernameAndId(Map<String, String> storyInfo) {

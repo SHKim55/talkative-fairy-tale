@@ -125,7 +125,7 @@ public class CommunityService {
         return evaluated;
     }
 
-    private List<StoryDTO> entityListToDto(List<StoryEntity> stories) {
+    public static List<StoryDTO> entityListToDto(List<StoryEntity> stories) {
         List<StoryDTO> retStories = new ArrayList<>();
         for(StoryEntity story:stories) {
             retStories.add(entityToDto(story));
@@ -133,7 +133,7 @@ public class CommunityService {
         return retStories;
     }
 
-    private StoryDTO entityToDto(StoryEntity story) {
+    public static StoryDTO entityToDto(StoryEntity story) {
         return new StoryDTO(story.getStoryId(), story.getTitle(), story.getUsername(), story.getContent(),
                 story.getTopic(), story.getLevel(), story.getIsCompleted(), story.getModifiedDate(), story.getVisibility(),
                 story.getLikeNum(), story.getDislikeNum());
