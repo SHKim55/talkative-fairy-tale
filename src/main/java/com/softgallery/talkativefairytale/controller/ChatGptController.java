@@ -2,7 +2,7 @@ package com.softgallery.talkativefairytale.controller;
 
 import com.softgallery.talkativefairytale.dto.ChatGptResponseDTO;
 import com.softgallery.talkativefairytale.dto.QuestionRequestDTO;
-import com.softgallery.talkativefairytale.service.ChatGptService;
+import com.softgallery.talkativefairytale.service.chatGpt.ChatGptService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

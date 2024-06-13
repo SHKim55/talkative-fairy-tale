@@ -1,6 +1,6 @@
 package com.softgallery.talkativefairytale.auth;
 
-import com.softgallery.talkativefairytale.dto.CustomUserDetails;
+import com.softgallery.talkativefairytale.service.user.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

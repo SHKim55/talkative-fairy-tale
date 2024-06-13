@@ -26,6 +26,14 @@ public class GPTPromptingInfo {
             + "이야기의 흐름은 최고로 자연스러워야 하고, 아이들이 이해하기 쉬운 단어로 문장을 구성해야 해. "
             + "또한 너는 한국어를 써야하고 높임말을 사용해야 해.";
 
+    private final String closingMessage = "### 이야기 종료 ###";
+
+    private final String titleAndTopicRecommendationMessage = "하단에 적힌 동화를 바탕으로 동화의 제목과 동화 주제를 추천해줘."
+            + "동화의 주제는 정직, 배려 등 4~6세의 어린아이에게 가르치기 좋은 교훈적 단어로 보내줘야 하고, 다음과 같은 형식으로 보내줘."
+            + "부연 설명 없이 반드시 아래의 형식으로만 보내줘.\n"
+            + "<title>\n(제목)\n<topic>\n(주제)";
+
+
     public GPTPromptingInfo() { }
 
     public String getInitalizingMessage() { return this.initalizingMessage; }
@@ -34,11 +42,14 @@ public class GPTPromptingInfo {
         return this.adaptingKoreanStyleMessage;
     }
 
-    public String getStoryContinuingMessage(String topic, Long level, String prevStory) {
+    public String getStoryContinuingMessage(String prevStory) {
         String result = this.storyContinuingMessage + "\n\n"
-                + "이야기의 주제는 " + topic + " 이고, "
                 + "지금까지 만들어진 이야기는 다음과 같아\n\n"
                 + prevStory;
         return result;
    }
+
+    public String getClosingMessage() { return this.closingMessage; }
+
+    public String getTitleAndTopicRecommendationMessage() { return this.titleAndTopicRecommendationMessage; }
 }

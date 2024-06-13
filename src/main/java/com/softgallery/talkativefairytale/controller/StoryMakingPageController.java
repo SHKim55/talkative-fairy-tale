@@ -1,57 +1,58 @@
 package com.softgallery.talkativefairytale.controller;
 
-import static java.lang.Long.parseLong;
-
 import com.softgallery.talkativefairytale.dto.StoryDTO;
-import com.softgallery.talkativefairytale.dto.UserDTO;
-import com.softgallery.talkativefairytale.service.StoryMaking;
-import java.time.LocalDate;
-import java.util.HashMap;
+import com.softgallery.talkativefairytale.service.story.StoryMakingService;
+import java.util.List;
 import java.util.Map;
-import org.apache.coyote.Response;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+@ResponseBody
 @RequestMapping("/make")
 public class StoryMakingPageController {
-    private StoryMaking storyMaking;
-    private StoryDTO currentStory, prevStory;
+    private final StoryMakingService storyMakingService;
 
-    public StoryMakingPageController(final StoryMaking storyMaking) {
-        this.storyMaking = storyMaking;
+    public StoryMakingPageController(final StoryMakingService storyMakingService) {
+        this.storyMakingService = storyMakingService;
     }
 
     @PostMapping("/")
-    public ResponseEntity<StoryDTO> makeStory(@RequestBody UserDTO userDTO, @RequestParam(value = "topic") String topic,
-                            @RequestParam(value = "level", defaultValue = "1") String level) {
-        System.out.println("topic: " + topic + "level: " + level);
-        currentStory = new StoryDTO("No Title", userDTO.getUsername(), "", topic, parseLong(level), false, LocalDate.now());
-        currentStory = storyMaking.createStory(currentStory);
+    public ResponseEntity<StoryDTO> makeStory(@RequestHeader(name = "Authorization") String userToken) {
+        StoryDTO currentStory = storyMakingService.createStory(userToken);
         return ResponseEntity.ok().body(currentStory);
     }
 
-    @PostMapping("/new/content")
-    public ResponseEntity<StoryDTO> addContent(@RequestBody StoryDTO storyInfo) {
-        StoryDTO updatedStory = storyMaking.addContentToStory(storyInfo.getId(), storyInfo.getContent());
+    @GetMapping("/{storyId}")
+    public ResponseEntity<List<String>> loadStory(@RequestHeader(name = "Authorization") String userToken,
+                                                               @PathVariable Long storyId) {
+        return ResponseEntity.ok().body(storyMakingService.findStoryByStoryId(storyId));
+    }
+
+    @PostMapping("/{storyId}/append")
+    public ResponseEntity<StoryDTO> appendContent(@RequestHeader(name = "Authorization") String userToken,
+                                                  @PathVariable Long storyId,
+                                                  @RequestBody Map<String, String> newStory) {
+        StoryDTO updatedStory = storyMakingService.addContentToStory(userToken, storyId, newStory);
         return ResponseEntity.ok().body(updatedStory);
     }
 
-//    @PostMapping("/resume")   // <username, id>
-//    public ResponseEntity<StoryDTO> resumeStory(@RequestBody Map<String, String> storyInfo) {
-//        prevStory = storyMaking.findStoryByUsernameAndId(storyInfo);
-//        currentStory = storyMaking.resumeMakingStory(prevStory, "");
-//        return ResponseEntity.ok().body(currentStory);
-//    }
-//
-//    @PostMapping("/save")
-//    public String saveStory(@Request) {
-//
-//    }
+    @PostMapping("/{storyId}/resume")
+    public boolean resumeStory(@PathVariable Long storyId) {
+        return storyMakingService.changeStoryStateIncomplete(storyId);
+    }
 
-//    @PostMapping("/save/complete")
+    @PostMapping("/{storyId}/visible/{visibility}")
+    public boolean changeVisibility(@PathVariable Long storyId,
+                                    @PathVariable String visibility) {
+        return storyMakingService.changeStoryVisibility(storyId, visibility);
+    }
 }

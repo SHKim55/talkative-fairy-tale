@@ -1,6 +1,6 @@
-package com.softgallery.talkativefairytale.service;
+package com.softgallery.talkativefairytale.service.chatGpt;
 
-import com.softgallery.talkativefairytale.ChatGptConfig;
+import com.softgallery.talkativefairytale.config.ChatGptConfig;
 import com.softgallery.talkativefairytale.dto.ChatGptRequestDTO;
 import com.softgallery.talkativefairytale.dto.ChatGptResponseDTO;
 import com.softgallery.talkativefairytale.dto.QuestionRequestDTO;
@@ -38,7 +38,7 @@ public class ChatGptService {
                 this.buildHttpEntity(
                         new ChatGptRequestDTO(
                                 ChatGptConfig.MODEL,
-                                requestDto.getQuestion(),
+                                requestDto.getMessages(),
                                 ChatGptConfig.MAX_TOKEN,
                                 ChatGptConfig.TEMPERATURE,
                                 ChatGptConfig.TOP_P
