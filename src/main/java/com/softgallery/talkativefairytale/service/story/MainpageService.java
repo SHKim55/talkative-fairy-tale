@@ -1,37 +1,37 @@
 package com.softgallery.talkativefairytale.service.story;
 
+import com.softgallery.talkativefairytale.auth.JWTUtil;
 import com.softgallery.talkativefairytale.dto.StoryDTO;
+import com.softgallery.talkativefairytale.dto.StoryInfoDTO;
 import com.softgallery.talkativefairytale.entity.StoryEntity;
 import com.softgallery.talkativefairytale.repository.StoryRepository;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.softgallery.talkativefairytale.service.CommunityService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MainpageService {
     private final StoryRepository storyRepository;
+    private final JWTUtil jwtUtil;
 
-    public MainpageService(final StoryRepository storyRepository) {
+    public MainpageService(final StoryRepository storyRepository, JWTUtil jwtUtil) {
         this.storyRepository = storyRepository;
+        this.jwtUtil = jwtUtil;
     }
 
-    public ArrayList<StoryDTO> findIncompleteStoriesMadeByUserName(String username) {
-        ArrayList<StoryDTO> storyDTOs = new ArrayList<>();
-        List<StoryEntity> stories = storyRepository.findAllByUsernameAndIsCompleted(username, false);
+    public List<StoryInfoDTO> findIncompleteStoriesMadeByUserName(String userToken) {
+        String username = jwtUtil.getUsername(JWTUtil.getOnlyToken(userToken));
+        List<StoryEntity> stories = storyRepository.findAllByUsernameAndIsCompletedOrderByModifiedDateDesc(username, false);
 
-        for(StoryEntity storyEntity : stories) {
-            storyDTOs.add(new StoryDTO(storyEntity));
-        }
-        return storyDTOs;
+        return CommunityService.entityListToInfo(stories);
     }
 
-    public ArrayList<StoryDTO> findCompleteStoriesMadeByUserName(String username) {
-        ArrayList<StoryDTO> storyDTOs = new ArrayList<>();
-        List<StoryEntity> stories = storyRepository.findAllByUsernameAndIsCompleted(username, true);
+    public List<StoryInfoDTO> findCompleteStoriesMadeByUserName(String userToken) {
+        String username = jwtUtil.getUsername(JWTUtil.getOnlyToken(userToken));
+        List<StoryEntity> stories = storyRepository.findAllByUsernameAndIsCompletedOrderByModifiedDateDesc( username, true);
 
-        for(StoryEntity storyEntity : stories) {
-            storyDTOs.add(new StoryDTO(storyEntity));
-        }
-        return storyDTOs;
+        return CommunityService.entityListToInfo(stories);
     }
 }
