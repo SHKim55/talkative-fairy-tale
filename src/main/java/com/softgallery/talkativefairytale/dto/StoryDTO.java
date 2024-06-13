@@ -34,6 +34,11 @@ public class StoryDTO {
 
     public StoryDTO() { }
 
+    public StoryDTO(final String content, final Boolean isCompleted) {
+        this.content = content;
+        this.isCompleted = isCompleted;
+    }
+
     public StoryDTO(final String title, final String username, final String content, final String topic, final Long level,
                     final Boolean isCompleted, final LocalDateTime modifiedDate) {
         this.title = title;

@@ -149,7 +149,11 @@ public class StoryMakingService {
 //        List<String> values = new ArrayList<>();
 //        values.add(choice.getMessage().getContent());
 
-        return null;
+        List<String> titleAndTopic = new ArrayList<String>();
+        titleAndTopic.add("야기와 친구들");
+        titleAndTopic.add("우정");
+
+        return titleAndTopic;
     }
 
     public StoryDTO createStory(String userToken) {
@@ -213,6 +217,11 @@ public class StoryMakingService {
         previousStoryEntity.setModifiedDate(LocalDateTime.now());
         previousStoryEntity.setContent(addedSentence);
 
+        System.out.println("message: " + choice.getMessage().getContent());
+        System.out.println("gpt: " + gptPromptingInfo.getClosingMessage());
+
+        String ret=choice.getMessage().getContent();
+
         // 이야기 종료
         if(choice.getMessage().getContent().contains(gptPromptingInfo.getClosingMessage())) {
             previousStoryEntity.setIsCompleted(true);
@@ -220,12 +229,18 @@ public class StoryMakingService {
             List<String> values = getRecommendedTitleAndTopic(addedSentence);
             previousStoryEntity.setTitle(values.get(0));   // Title
             previousStoryEntity.setTopic(values.get(1));   // Topic
+
+            System.out.println("bef: " + ret);
+            ret = ret.replace("### 이야기 종료 ###", "");
+            System.out.println("aft: " + ret);
         }
 
         StoryEntity updatedStoryEntity = storyRepository.save(previousStoryEntity);
         StoryDTO updatedStoryDTO = new StoryDTO(updatedStoryEntity);
-        updatedStoryDTO.setContent(choice.getMessage().getContent());   // 가장 마지막에 만든 문장만 반환하도록 처리
-  
+
+        updatedStoryDTO.setContent(ret);   // 가장 마지막에 만든 문장만 반환하도록 처리
+
+
         return updatedStoryDTO;
     }
 
