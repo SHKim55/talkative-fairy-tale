@@ -29,8 +29,8 @@ public class ChatGptController {
         return chatGptService.askQuestion(requestDTO);
     }
 
-    @GetMapping("/token")
-    public ResponseEntity<String> getToken() {
-        return ResponseEntity.ok().body(this.gptToken);
-    }
+//    @GetMapping("/token")
+//    public ResponseEntity<String> getToken() {
+//        return ResponseEntity.ok().body(this.gptToken);
+//    }
 }
