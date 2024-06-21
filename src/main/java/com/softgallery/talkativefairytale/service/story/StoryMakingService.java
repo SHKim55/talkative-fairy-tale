@@ -9,11 +9,11 @@ import com.softgallery.talkativefairytale.entity.StoryEntity;
 import com.softgallery.talkativefairytale.repository.CharacterRepository;
 import com.softgallery.talkativefairytale.repository.StoryEvaluationRepository;
 import com.softgallery.talkativefairytale.repository.StoryRepository;
-import com.softgallery.talkativefairytale.service.CommunityService;
 import com.softgallery.talkativefairytale.service.character.CharacterService;
 import com.softgallery.talkativefairytale.service.chatGpt.ChatGptService;
 import com.softgallery.talkativefairytale.service.chatGpt.Choice;
 import com.softgallery.talkativefairytale.service.chatGpt.Message;
+import com.softgallery.talkativefairytale.service.moderation.WordFilter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -213,7 +213,11 @@ public class StoryMakingService {
 
         if(previousStoryEntity.getIsCompleted()) throw new RuntimeException("Already completed story");
 
-        // 예외처리 통과 후
+        // Invalid Story 예외처리 통과 후 Moderation 체크
+        WordFilterDTO filterResult = WordFilter.doFilterWithGptModeration(userInput.get("newStory"));
+        if(filterResult.isBad()) return new StoryDTO(WordFilter.getBadDataIndicator(), false);
+
+        // Moderation 통과 후
         String updatedContent = previousStoryDTO.getContent() + "\n<user>\n" + userInput.get("newStory");
 
         Message message = new Message("system", createGPTQuery(updatedContent));
