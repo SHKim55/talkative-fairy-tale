@@ -9,11 +9,11 @@ import com.softgallery.talkativefairytale.entity.StoryEntity;
 import com.softgallery.talkativefairytale.repository.CharacterRepository;
 import com.softgallery.talkativefairytale.repository.StoryEvaluationRepository;
 import com.softgallery.talkativefairytale.repository.StoryRepository;
-import com.softgallery.talkativefairytale.service.CommunityService;
 import com.softgallery.talkativefairytale.service.character.CharacterService;
 import com.softgallery.talkativefairytale.service.chatGpt.ChatGptService;
 import com.softgallery.talkativefairytale.service.chatGpt.Choice;
 import com.softgallery.talkativefairytale.service.chatGpt.Message;
+import com.softgallery.talkativefairytale.service.moderation.WordFilter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,25 +135,38 @@ public class StoryMakingService {
     }
 
     private List<String> getRecommendedTitleAndTopic(String content) {
-//        String queryStatement = gptPromptingInfo.getTitleAndTopicRecommendationMessage()
-//                + "\n" + content;
-//
-//        Message message = new Message("system", queryStatement);
-//        List<Message> messages = new ArrayList<>();
-//        messages.add(message);
-//
-//        ChatGptResponseDTO responseDTO = chatGptService.askQuestion(new QuestionRequestDTO(messages));
-//        Choice choice = responseDTO.getChoices().get(0);
-//        System.out.println(choice.getMessage().getContent());
-//
-//        List<String> values = new ArrayList<>();
-//        values.add(choice.getMessage().getContent());
+        String queryStatement = gptPromptingInfo.getTitleAndTopicRecommendationMessage()
+                + "\n" + content;
+
+        Message message = new Message("system", queryStatement);
+        List<Message> messages = new ArrayList<>();
+        messages.add(message);
+
+        ChatGptResponseDTO responseDTO = chatGptService.askQuestion(new QuestionRequestDTO(messages));
+        Choice choice = responseDTO.getChoices().get(0);
+
+        String title = extractContent(choice.getMessage().getContent(), "title", "topic");
+        String topic = extractContent(choice.getMessage().getContent(), "topic", null);
+
+        List<String> values = new ArrayList<>();
+        values.add(choice.getMessage().getContent());
 
         List<String> titleAndTopic = new ArrayList<String>();
-        titleAndTopic.add("야기와 친구들");
-        titleAndTopic.add("우정");
+        titleAndTopic.add(title);
+        titleAndTopic.add(topic);
 
         return titleAndTopic;
+    }
+
+    public static String extractContent(String input, String startTag, String nextTag) {
+        String startTagString = "<" + startTag + ">";
+        int startIndex = input.indexOf(startTagString) + startTagString.length();
+        int endIndex = (nextTag != null) ? input.indexOf("<" + nextTag + ">", startIndex) : input.length();
+
+        if (startIndex >= startTagString.length() && (endIndex > startIndex || nextTag == null)) {
+            return input.substring(startIndex, endIndex).trim();
+        }
+        return null;
     }
 
     public StoryDTO createStory(String userToken) {
@@ -187,7 +200,7 @@ public class StoryMakingService {
 
         return savedStoryDTO;
     }
-  
+
     public StoryDTO addContentToStory(String userToken, Long storyId, Map<String, String> userInput) {
         Optional<StoryEntity> storyEntityOptional = storyRepository.findById(storyId);
         if(storyEntityOptional.isEmpty()) throw new RuntimeException("No such story");
@@ -200,7 +213,11 @@ public class StoryMakingService {
 
         if(previousStoryEntity.getIsCompleted()) throw new RuntimeException("Already completed story");
 
-        // 예외처리 통과 후
+        // Invalid Story 예외처리 통과 후 Moderation 체크
+        WordFilterDTO filterResult = WordFilter.doFilterWithGptModeration(userInput.get("newStory"));
+        if(filterResult.isBad()) return new StoryDTO(WordFilter.getBadDataIndicator(), false);
+
+        // Moderation 통과 후
         String updatedContent = previousStoryDTO.getContent() + "\n<user>\n" + userInput.get("newStory");
 
         Message message = new Message("system", createGPTQuery(updatedContent));
@@ -217,9 +234,6 @@ public class StoryMakingService {
         previousStoryEntity.setModifiedDate(LocalDateTime.now());
         previousStoryEntity.setContent(addedSentence);
 
-        System.out.println("message: " + choice.getMessage().getContent());
-        System.out.println("gpt: " + gptPromptingInfo.getClosingMessage());
-
         String ret=choice.getMessage().getContent();
 
         // 이야기 종료
@@ -230,9 +244,10 @@ public class StoryMakingService {
             previousStoryEntity.setTitle(values.get(0));   // Title
             previousStoryEntity.setTopic(values.get(1));   // Topic
 
-            System.out.println("bef: " + ret);
             ret = ret.replace("### 이야기 종료 ###", "");
-            System.out.println("aft: " + ret);
+
+            String lastSentence = updatedContent + "\n<gpt>\n" + ret;
+            previousStoryEntity.setContent(lastSentence);
         }
 
         StoryEntity updatedStoryEntity = storyRepository.save(previousStoryEntity);

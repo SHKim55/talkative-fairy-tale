@@ -1,14 +1,12 @@
 package com.softgallery.talkativefairytale.service.story;
 
 import com.softgallery.talkativefairytale.auth.JWTUtil;
-import com.softgallery.talkativefairytale.dto.StoryDTO;
 import com.softgallery.talkativefairytale.dto.StoryInfoDTO;
 import com.softgallery.talkativefairytale.entity.StoryEntity;
 import com.softgallery.talkativefairytale.repository.StoryRepository;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.softgallery.talkativefairytale.service.CommunityService;
+import com.softgallery.talkativefairytale.service.community.CommunityService;
 import org.springframework.stereotype.Service;
 
 @Service

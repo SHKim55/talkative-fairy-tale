@@ -22,6 +22,7 @@ import static com.softgallery.talkativefairytale.config.ChatGptConfig.API_KEY;
 @PropertySource("classpath:openai.properties")
 public class WordFilter {
     private static final String GPT_MODERATION_API_URL = "https://api.openai.com/v1/moderations";
+    private static final String BAD_DATA_INDICATOR = "{[ReJeCTed!]}";
     private static final List<String> VIOLENT_OR_CRIMINAL_WORDS = Arrays.asList(
             "폭력", "범죄", "살인", "강도", "강간", "납치", "테러", "학대", "폭행", "강탈",
             "방화", "절도", "협박", "마약", "성폭력", "성범죄", "사기", "도박", "인질", "매춘",
@@ -168,6 +169,8 @@ public class WordFilter {
             "인권기구", "국제인권", "여성인권", "아동인권", "노동인권", "장애인인권", "소수자인권",
             "난민", "난민보호", "난민문제"
     );
+
+    public static String getBadDataIndicator() { return BAD_DATA_INDICATOR; };
 
     public static WordFilterDTO doFilterWithGptModeration(String input) {
         // 로컬 단어 필터링을 먼저 수행
