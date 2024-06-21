@@ -1,9 +1,8 @@
 package com.softgallery.talkativefairytale.controller;
 
-import com.softgallery.talkativefairytale.dto.StoryDTO;
 import com.softgallery.talkativefairytale.dto.StoryInfoDTO;
 import com.softgallery.talkativefairytale.dto.StoryNumberDTO;
-import com.softgallery.talkativefairytale.service.CommunityService;
+import com.softgallery.talkativefairytale.service.community.CommunityService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

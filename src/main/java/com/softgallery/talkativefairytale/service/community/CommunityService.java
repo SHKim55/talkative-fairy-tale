@@ -1,4 +1,4 @@
-package com.softgallery.talkativefairytale.service;
+package com.softgallery.talkativefairytale.service.community;
 
 import com.softgallery.talkativefairytale.auth.JWTUtil;
 import com.softgallery.talkativefairytale.dto.StoryDTO;
