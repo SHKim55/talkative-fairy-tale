@@ -213,11 +213,11 @@ public class StoryMakingService {
 
         if(previousStoryEntity.getIsCompleted()) throw new RuntimeException("Already completed story");
 
-        // Invalid Story 예외처리 통과 후 Moderation 체크
+        // Invalid Story 예외처리 통과 후 1차 Moderation 체크
         WordFilterDTO filterResult = WordFilter.doFilterWithGptModeration(userInput.get("newStory"));
         if(filterResult.isBad()) return new StoryDTO(WordFilter.getBadDataIndicator(), false);
 
-        // Moderation 통과 후
+        // 1차 Moderation 통과 후 4o 모델을 사용한 2차 체크 -> 통과 시 다음 문장 생성
         String updatedContent = previousStoryDTO.getContent() + "\n<user>\n" + userInput.get("newStory");
 
         Message message = new Message("system", createGPTQuery(updatedContent));
@@ -227,6 +227,11 @@ public class StoryMakingService {
         // 유저가 보낸 내용에 따라 GPT가 응답 생성
         ChatGptResponseDTO responseDTO = chatGptService.askQuestion(new QuestionRequestDTO(messages));
         Choice choice = responseDTO.getChoices().get(0);
+
+        // GPT의 2차 Moderation check를 통과하지 못한 경우
+        if(choice.getMessage().getContent().contains(gptPromptingInfo.getModerationDetectingMessage())) {
+            return new StoryDTO(WordFilter.getBadDataIndicator(), false);
+        }
 
         String addedSentence = updatedContent + "\n<gpt>\n" + choice.getMessage().getContent();
 
