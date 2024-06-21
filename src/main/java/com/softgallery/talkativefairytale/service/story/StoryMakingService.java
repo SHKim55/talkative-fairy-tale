@@ -135,25 +135,45 @@ public class StoryMakingService {
     }
 
     private List<String> getRecommendedTitleAndTopic(String content) {
-//        String queryStatement = gptPromptingInfo.getTitleAndTopicRecommendationMessage()
-//                + "\n" + content;
-//
-//        Message message = new Message("system", queryStatement);
-//        List<Message> messages = new ArrayList<>();
-//        messages.add(message);
-//
-//        ChatGptResponseDTO responseDTO = chatGptService.askQuestion(new QuestionRequestDTO(messages));
-//        Choice choice = responseDTO.getChoices().get(0);
-//        System.out.println(choice.getMessage().getContent());
-//
-//        List<String> values = new ArrayList<>();
-//        values.add(choice.getMessage().getContent());
+        String queryStatement = gptPromptingInfo.getTitleAndTopicRecommendationMessage()
+                + "\n" + content;
+
+        Message message = new Message("system", queryStatement);
+        List<Message> messages = new ArrayList<>();
+        messages.add(message);
+
+        ChatGptResponseDTO responseDTO = chatGptService.askQuestion(new QuestionRequestDTO(messages));
+        Choice choice = responseDTO.getChoices().get(0);
+        System.out.println("#*#*#*" + choice.getMessage().getContent() + "*#*#*#");
+
+        String title = extractContent(choice.getMessage().getContent(), "title", "topic");
+        String topic = extractContent(choice.getMessage().getContent(), "topic", null);
+
+        System.out.println("전체: " + choice.getMessage().getContent() + "\n");
+        System.out.println("title: " + title + "\n");
+        System.out.println("topic: " + topic + "\n");
+
+
+        List<String> values = new ArrayList<>();
+        values.add(choice.getMessage().getContent());
 
         List<String> titleAndTopic = new ArrayList<String>();
-        titleAndTopic.add("야기와 친구들");
-        titleAndTopic.add("우정");
+        System.out.println("********" + titleAndTopic);
+        titleAndTopic.add(title);
+        titleAndTopic.add(topic);
 
         return titleAndTopic;
+    }
+
+    public static String extractContent(String input, String startTag, String nextTag) {
+        String startTagString = "<" + startTag + ">";
+        int startIndex = input.indexOf(startTagString) + startTagString.length();
+        int endIndex = (nextTag != null) ? input.indexOf("<" + nextTag + ">", startIndex) : input.length();
+
+        if (startIndex >= startTagString.length() && (endIndex > startIndex || nextTag == null)) {
+            return input.substring(startIndex, endIndex).trim();
+        }
+        return null;
     }
 
     public StoryDTO createStory(String userToken) {
