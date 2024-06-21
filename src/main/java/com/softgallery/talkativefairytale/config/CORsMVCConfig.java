@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class CORsMVCConfig implements WebMvcConfigurer {
-    String allowedOrigin="http://3.92.120.236";
+    String allowedOrigin="http://35.175.10.202";
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
