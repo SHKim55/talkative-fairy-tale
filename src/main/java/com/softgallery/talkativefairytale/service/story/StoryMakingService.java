@@ -48,37 +48,7 @@ public class StoryMakingService {
         this.jwtUtil = jwtUtil;
     }
 
-    private void updateCharacterList(CharacterEntity character) {
-        characters.add(new CharacterDTO(character));
-    }
 
-//    public StoryDTO createStory(String userToken) {
-////        characters = new ArrayList<>(List.of(characterService.selectCharacters()));
-//        String username = jwtUtil.getUsername(JWTUtil.getOnlyToken(userToken));
-//        Message message = new Message("system", createGPTQuery(""));
-//        List<Message> messages = new ArrayList<>();
-//        messages.add(message);
-//
-//        // 프롬프트 적용 후 쿼리 날려서 받아오기
-//        ChatGptResponseDTO responseDTO = chatGptService.askQuestion(new QuestionRequestDTO(messages));
-//        Choice choice = responseDTO.getChoices().get(0);
-//
-//        StoryEntity currentStory = new StoryEntity();
-//        currentStory.setTitle("No Title");
-//        currentStory.setUsername(username);
-//        currentStory.setTopic("Default Topic");
-//        currentStory.setLevel(1L);
-//        currentStory.setIsCompleted(false);
-//        currentStory.setContent("<gpt>\n" + choice.getMessage().getContent());
-//        currentStory.setModifiedDate(LocalDateTime.now());
-//        currentStory.setLikeNum(0L);
-//        currentStory.setDislikeNum(0L);
-//        currentStory.setVisibility(Visibility.PRIVATE);
-//
-//        StoryEntity savedStory = storyRepository.save(currentStory);
-//
-//        return new StoryDTO(savedStory);
-//    }
     private List<Map<String, String>> parseContents(StoryDTO storyDTO) {
         List<Map<String, String>> parsedContents = new ArrayList<>();
 
@@ -111,20 +81,6 @@ public class StoryMakingService {
                     + gptPromptingInfo.getStyleOptimizingMessage() + "\n\n"
                     + "너는 위 정보를 가지고 이야기의 도입부분을 한국어로 만들어줘야해.\n"
                     ;
-//                    + "등장인물의 정보는 아래와 같아.\n\n"
-//                    + "<주인공>\n" + mainCharacter.getName() + " : " + mainCharacter.getPersonalityGood() + "\n"
-//                    + "<악당>\n" + villain.getName() + " : " + villain.getPersonalityBad() + "\n";
-
-//            for(int i = 2; i < characters.size(); i++) {
-//                CharacterDTO character = characters.get(i);
-//
-//                if(i == 2) {
-//                    result += "<조연>\n" + character.getName() + " : " + character.getPersonalityNormal() + "\n";
-//                }
-//                else {
-//                    result += character.getName() + " : " + character.getPersonalityNormal() + "\n";
-//                }
-//            }
 
             return result;
         }
@@ -170,7 +126,6 @@ public class StoryMakingService {
     }
 
     public StoryDTO createStory(String userToken) {
-//        characters = new ArrayList<>(List.of(characterService.selectCharacters()));
         String username = jwtUtil.getUsername(JWTUtil.getOnlyToken(userToken));
 
         // 시스템 프롬프트 적용
